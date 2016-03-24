@@ -8,6 +8,7 @@ class XoxzoCloud:
     def __init__(self, sid, auth_token):
         self.sid = sid
         self.auth_token = auth_token
+        self.send_sms_last_respose = None
 
     def send_sms(self, message, recipient, sender):
         url = "https://api.xoxzo.com/sms/messages/"
