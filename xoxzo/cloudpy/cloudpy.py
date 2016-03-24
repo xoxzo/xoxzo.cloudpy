@@ -1,7 +1,6 @@
 # xoxzo api libirary
 
 import requests
-import json
 
 
 class XoxzoCloud:
