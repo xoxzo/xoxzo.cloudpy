@@ -1,3 +1,3 @@
 # -*- coding: utf-8 -*-
 
-from .cloudpy import XoxzoCloud
+from .cloudpy import XoxzoClient
