@@ -13,8 +13,15 @@ __date__ = "25 March 2011"
 
 
 class XoxzoClient:
+    '''
+    root class that access Xoxzo API
 
+    '''
     def __init__(self, sid=None, auth_token=None):
+        '''
+        initialize XoxzoClient class
+        
+        '''
         api_host = os.environ.get("XOXZO_API_HOST")
         if api_host is not None:
             xoxzo_api_host = api_host

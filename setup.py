@@ -7,5 +7,5 @@ setup(
     install_requires=[
         'requests',
     ],
-    test_suite = 'test'
+    test_suite = 'tests'
 )
