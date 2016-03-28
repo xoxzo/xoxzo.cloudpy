@@ -91,7 +91,17 @@ class XoxzoClient:
         '''
 
         if msgid is None:
-            msgid = self.send_sms_last_response.json()[0]['msgid']
+            res = self.send_sms_last_response.json()
+            if isinstance(res, dict):
+                # most likely, bad sid,auth_token was used in previouss call
+                return self.send_sms_last_response
+            '''
+            if prevouse send_sms call success, send_sms_last_response is list
+            and first element is dict(json) and shoud have key msgid.
+
+            '''
+            msgid = res[0]['msgid']
+
         url = self.xoxzo_api_sms_url + msgid
         r = requests.get(url, auth=(self.sid, self.auth_token))
         return r

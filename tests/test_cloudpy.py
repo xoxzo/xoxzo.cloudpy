@@ -68,6 +68,30 @@ class TestXoxzoClient(unittest.TestCase):
         print response.status_code
         self.assertEqual(400, response.status_code)
 
+    def test_send_sms_fail02(self):
+        # bad recipient
+        xc = XoxzoClient()
+        response = xc.send_sms(
+            "Hello from Xoxzo",
+            "+8108012345678",
+            self.test_sender)
+        # send sms fails and follwoing get status call shuld return error
+        response = xc.get_sms_delivery_status()
+        self.dump_response(response)
+        self.assertEqual(400, response.status_code)
+
+    def test_send_sms_fail03(self):
+        # bad sid, auth_token
+        xc = XoxzoClient("hoge", "123456")
+        response = xc.send_sms(
+            "Hello from Xoxzo",
+            "+8108012345678",
+            self.test_sender)
+        # send sms fails and follwoing get status call shuld return error
+        response = xc.get_sms_delivery_status()
+        self.dump_response(response)
+        self.assertEqual(401, response.status_code)
+
     def test_get_sms_delivery_status_fail01(self):
         # bad msgid
         xc = XoxzoClient()
