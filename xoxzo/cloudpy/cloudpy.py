@@ -98,7 +98,6 @@ class XoxzoClient:
             '''
             if prevouse send_sms call success, send_sms_last_response is list
             and first element is dict(json) and shoud have key msgid.
-
             '''
             msgid = res[0]['msgid']
 
@@ -138,6 +137,15 @@ class XoxzoClient:
         '''
 
         if callid is None:
+            res = self.voice_palyback_last_response.json()
+            if isinstance(res, dict):
+                # most likely, bad sid,auth_token was used in previouss call
+                return self.voice_palyback_last_response
+            '''
+            if prevouse voice_playback call success,
+            voice_palyback_last_response is list
+            and first element is dict(json) and shoud have key callid.
+            '''
             callid = self.voice_palyback_last_response.json()[0]['callid']
         url = self.xoxzo_api_voice_simple_url + callid
         r = requests.get(url, auth=(self.sid, self.auth_token))
