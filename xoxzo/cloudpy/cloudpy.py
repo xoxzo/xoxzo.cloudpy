@@ -1,6 +1,9 @@
 # xoxzo api libirary
 """
 This is the API library for Xoxzo's telephony service.
+http://docs.xoxzo.com/en/
+
+see http://docs.python-requests.org/en/master/ for requests library.
 """
 
 import requests
@@ -19,9 +22,18 @@ class XoxzoClient:
     '''
     def __init__(self, sid=None, auth_token=None):
         '''
-        initialize XoxzoClient class
-        
+        initialize and instanceate XoxzoClient object
+
+        sid: your sid of xoxzo account
+            if None, value of environment variable XOXZO_API_SID is used.
+
+        auth_token: your auth_token of xoxzo account
+            if None, value of environment variable XOXZO_API_AUTH_TOKEN
+            is used.
         '''
+
+        # you can override api host by setting envrionment
+        # variable XOXZO_API_HOST
         api_host = os.environ.get("XOXZO_API_HOST")
         if api_host is not None:
             xoxzo_api_host = api_host
@@ -46,6 +58,15 @@ class XoxzoClient:
         self.voice_palyback_last_response = None
 
     def send_sms(self, message, recipient, sender):
+        '''
+        send sms to the recipient.
+
+        message: Message body
+        recipient: Message recipient
+        sender: Sender ID
+
+        return: Response object of the Requests library for Python
+        '''
         payload = {
             'message': message,
             'recipient': recipient,
@@ -58,13 +79,31 @@ class XoxzoClient:
         return self.send_sms_last_response
 
     def get_sms_delivery_status(self, msgid=None):
+        '''
+        get sms delivery status.
+
+        msgid: msgid of the return valun of send_sms() method.
+            if None, the message id of the last send_sms() method call
+            will be used.
+
+        return: Response object of the Requests library for Python
+
+        '''
+
         if msgid is None:
             msgid = self.send_sms_last_response.json()[0]['msgid']
         url = self.xoxzo_api_sms_url + msgid
-        r = requests.post(url, auth=(self.sid, self.auth_token))
+        r = requests.get(url, auth=(self.sid, self.auth_token))
         return r
 
-    def voice_simple_playback(self, caller, recipient, recording_url):
+    def call_simple_playback(self, caller, recipient, recording_url):
+        '''
+        make a phone call and play back MP3 sound file.
+
+        caller: caller phone number
+        recipient: Phone call recipient.
+        recording_url: MP3 file URL
+        '''
         payload = {
             'caller': caller,
             'recipient': recipient,
@@ -76,9 +115,20 @@ class XoxzoClient:
         # remember the last response for future use
         return self.voice_palyback_last_response
 
-    def get_voice_simple_playback_status(self, callid=None):
+    def get_simple_playback_status(self, callid=None):
+        '''
+        get simple palyback status.
+
+        callid: msgid of the return valun of send_sms() method.
+            if None, the callid id of the last call_simple_playback()
+            method call will be used.
+
+        return: Response object of the Requests library for Python
+            see http://docs.python-requests.org/en/master/ for details.
+        '''
+
         if callid is None:
             callid = self.voice_palyback_last_response.json()[0]['callid']
         url = self.xoxzo_api_voice_simple_url + callid
-        r = requests.post(url, auth=(self.sid, self.auth_token))
+        r = requests.get(url, auth=(self.sid, self.auth_token))
         return r

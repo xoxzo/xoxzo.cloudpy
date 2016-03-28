@@ -19,7 +19,7 @@ class TestXoxzoClient(unittest.TestCase):
         print "Test MP3 url: %s" % self.test_mp3_url
 
     def test_send_sms_success01(self):
-        return # skip for now
+        return  # skip for now
         xc = XoxzoClient()
         response = xc.send_sms(
             "Hello from Xoxzo",
@@ -34,10 +34,10 @@ class TestXoxzoClient(unittest.TestCase):
         print response.status_code
         self.assertEqual(requests.codes.ok, response.status_code)
 
-    def test_voice_simple_playback_success01(self):
-        return # skip for now
+    def test_call_simple_playback_success01(self):
+        return  # skip for now
         xc = XoxzoClient()
-        response = xc.voice_simple_playback(
+        response = xc.call_simple_playback(
             self.test_sender,
             self.test_recipient,
             self.test_mp3_url)
@@ -46,7 +46,7 @@ class TestXoxzoClient(unittest.TestCase):
         print response.status_code
         self.assertEqual(201, response.status_code)
 
-        response = xc.get_voice_simple_playback_status()
+        response = xc.get_simple_playback_status()
         self.dump_response(response)
         print response.status_code
         self.assertEqual(requests.codes.ok, response.status_code)
@@ -54,14 +54,43 @@ class TestXoxzoClient(unittest.TestCase):
     def test_bad_sid(self):
         xc = XoxzoClient("123", "456")
         response = xc.send_sms("123", "123", "123")
-        self.assertEqual(401,response.status_code)
+        self.assertEqual(401, response.status_code)
+
+    def test_send_sms_fail01(self):
+        # bad recipient
+        xc = XoxzoClient()
+        response = xc.send_sms(
+            "Hello from Xoxzo",
+            "+8108012345678",
+            self.test_sender)
+
+        self.dump_response(response)
+        print response.status_code
+        self.assertEqual(400, response.status_code)
 
     def test_get_sms_delivery_status_fail01(self):
         # bad msgid
         xc = XoxzoClient()
         response = xc.get_sms_delivery_status("123456")
-        #self.dump_response(response)
-        self.assertEqual(404,response.status_code)
+        self.assertEqual(404, response.status_code)
+
+    def test_call_simple_playback_fail01(self):
+        # bad recipient
+        xc = XoxzoClient()
+        response = xc.call_simple_playback(
+            self.test_sender,
+            "+8108012345678",
+            self.test_mp3_url)
+
+        self.dump_response(response)
+        print response.status_code
+        self.assertEqual(400, response.status_code)
+
+    def test_get_simple_playback_status_fail01(self):
+        # bad callid
+        xc = XoxzoClient()
+        response = xc.get_simple_playback_status("123456")
+        self.assertEqual(404, response.status_code)
 
     def dump_response(self, response):
         print json.dumps(response.json(), indent=4)
