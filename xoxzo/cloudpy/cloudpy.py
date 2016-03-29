@@ -17,17 +17,15 @@ __date__ = "25 March 2011"
 
 class XoxzoClient:
     '''
-    root class that access Xoxzo API
-
+    Base class to access Xoxzo API
     '''
     def __init__(self, sid=None, auth_token=None):
         '''
         initialize and instanceate XoxzoClient object
-
-        sid: your sid of xoxzo account
+        :param string sid:  your sid of xoxzo account
             if None, value of environment variable XOXZO_API_SID is used.
 
-        auth_token: your auth_token of xoxzo account
+        :param string auth_token: your auth_token of xoxzo account
             if None, value of environment variable XOXZO_API_AUTH_TOKEN
             is used.
         '''

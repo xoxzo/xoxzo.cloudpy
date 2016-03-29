@@ -19,7 +19,7 @@ class TestXoxzoClient(unittest.TestCase):
         # print "Test MP3 url: %s" % self.test_mp3_url
 
     def test_send_sms_success01(self):
-        # return  # skip for now
+        return  # skip for now
         xc = XoxzoClient()
         response = xc.send_sms(
             "Hello from Xoxzo",
@@ -138,9 +138,9 @@ class TestXoxzoClient(unittest.TestCase):
     def dump_response(self, response):
         print
         print "---------------------"
-        print response.status_code
-        print response.text
-        print
+        print "http status: " + str(response.status_code)
+        # print response.text
+        # print
         j = response.json()
         print type(j)
         print json.dumps(j, indent=4)
