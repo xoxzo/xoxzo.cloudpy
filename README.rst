@@ -5,14 +5,15 @@ Xoxzo Cloud API Client for Python
 This is the official client and implementation reference to talk to `Xoxzo's Cloud Communication API <https://www.xoxzo.com/en/>`_.
 For detailed documentation on the API itself, you can refer to the `documentation <http://docs.xoxzo.com/en/>`_
 
-**sample code**
+**Sample Code**
+
+*Sample code 1*
 
 send sms::
 
   import json
   from xoxzo.cloudpy import XoxzoClient
 
-  # sample 01 send sms
   xc = XoxzoClient(sid="<your xoxzo sid>", auth_token="<your xoxzo auth_token>")
   xc.send_sms(
       message = "Hello from Xoxzo",
@@ -21,10 +22,12 @@ send sms::
   result = xc.get_sms_delivery_status()
   print json.dumps(result.json(), indent=4)
 
+*Sample code 2*
 
-play back mp3 file::
+Make phone call and palyback MP3 file::
 
-  # sample 02 call voice playback
+  import json
+  from xoxzo.cloudpy import XoxzoClient
 
   xc = XoxzoClient(sid="<your xoxzo sid>", auth_token="<your xoxzo auth_token>")
   xc.call_simple_playback(
