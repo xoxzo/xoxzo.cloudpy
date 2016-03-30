@@ -44,27 +44,28 @@ class TestXoxzoClient(unittest.TestCase):
         self.dump_response(response)
 
     def test_bad_sid(self):
-        xc = XoxzoClient(sid = "123", auth_token = "456")
+        xc = XoxzoClient(sid="123", auth_token="456")
         response = xc.send_sms(
-            message = "Hello from Xoxzo",
-            recipient = "+8108012345678",
-            sender = self.test_sender)
+            message="Hello from Xoxzo",
+            recipient="+8108012345678",
+            sender=self.test_sender)
         self.dump_response(response)
 
     def test_send_sms_fail01(self):
         # bad recipient
         xc = XoxzoClient()
         response = xc.send_sms(
-            message = "Hello from Xoxzo",
-            recipient = "+8108012345678",
-            sender = self.test_sender)
+            message="Hello from Xoxzo",
+            recipient="+8108012345678",
+            sender=self.test_sender)
 
         self.dump_response(response)
 
     def test_get_sms_delivery_status_fail01(self):
         # bad msgid
         xc = XoxzoClient()
-        response = xc.get_sms_delivery_status(msgid = "dabd8e76-390f-421c-87b5-57f31339d0c5")
+        response = xc.get_sms_delivery_status(
+            msgid="dabd8e76-390f-421c-87b5-57f31339d0c5")
         self.dump_response(response)
 
     def test_call_simple_playback_fail01(self):
@@ -79,7 +80,8 @@ class TestXoxzoClient(unittest.TestCase):
     def test_get_simple_playback_status_fail01(self):
         # bad callid
         xc = XoxzoClient()
-        response = xc.get_simple_playback_status(callid = "dabd8e76-390f-421c-87b5-57f31339d0c5")
+        response = xc.get_simple_playback_status(
+            callid="dabd8e76-390f-421c-87b5-57f31339d0c5")
         self.dump_response(response)
 
     def dump_response(self, response):
