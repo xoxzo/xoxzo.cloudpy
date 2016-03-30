@@ -5,12 +5,12 @@ Xoxzo Cloud API Client for Python
 This is the official client and implementation reference to talk to `Xoxzo's Cloud Communication API <https://www.xoxzo.com/en/>`_.
 For detailed documentation on the API itself, you can refer to the `documentation <http://docs.xoxzo.com/en/>`_
 
-**About**
+**Introduction**
 
 xoxzo.cloudpy is the paython package that you can send sms or make a phone call and playback a MP3 file
 via Xoxzo telephony API. This is the open source package with MIT LICENSE.
 
-**Sample Code**
+**Sample Code 1**
 
 *send sms*::
 
@@ -28,13 +28,13 @@ via Xoxzo telephony API. This is the open source package with MIT LICENSE.
           print "*** Error ***"
           print result['detail']
           return
-
+      msgid = result[0]['msgid']
       result = xc.get_sms_delivery_status(msgid)
       print json.dumps(result, indent=4)
 
   sample_send_sms()
 
-**How to use**
+*Explanation*
 
 You can send sms or make a phone call with just a few line of python code.
 
@@ -54,3 +54,31 @@ You can send sms or make a phone call with just a few line of python code.
   You will need this id when checking the delivery status later.
 
 3. You can check the sms delivery status by get_sms_delivery_status() method. You will provide message-id of the sms you want to check.
+
+**Sample Code 2**
+
+*call simple playback*::
+
+  import json
+  from xoxzo.cloudpy import XoxzoClient
+  
+  def sample_call_simple_playback():
+      xc = XoxzoClient(sid="<your xoxzo sid>", auth_token="<your xoxzo auth_token>")
+      xc = XoxzoClient()
+      result = xc.call_simple_playback(
+          recipient = "+818012345678",
+          recording_url = "http://example.com/sample.mp3",
+          caller = "818011112222")
+      if not isinstance(result,list):
+          print "*** Error ***"
+          print result['detail']
+          return
+      callid = result[0]['callid']
+      result = xc.get_simple_playback_status(callid)
+      print json.dumps(result, indent=4)
+
+  sample_call_simple_playback()
+
+*Explanation*
+
+TBD.
