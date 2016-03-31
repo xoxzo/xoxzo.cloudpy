@@ -12,7 +12,7 @@ via Xoxzo telephony API. This is the open source package with MIT LICENSE.
 
 **Sample Code 1**
 
-*send sms*::
+*Send sms*::
 
   import json
   from xoxzo.cloudpy import XoxzoClient
@@ -50,18 +50,18 @@ You can send sms or make a phone call with just a few line of python code.
 
   * sender: this number will be displayed on the recipient device.
 
-  This method will return json or list. If there is no error, list that contains the message-id will be returned.
+  This method will return dictionary or list. If there is no error, list that contains the message-id will be returned.
   You will need this id when checking the delivery status later.
 
 3. You can check the sms delivery status by get_sms_delivery_status() method. You will provide message-id of the sms you want to check.
 
 **Sample Code 2**
 
-*call simple playback*::
+*Make a phone call and playback MP3 file*::
 
   import json
   from xoxzo.cloudpy import XoxzoClient
-  
+
   def sample_call_simple_playback():
       xc = XoxzoClient(sid="<your xoxzo sid>", auth_token="<your xoxzo auth_token>")
       xc = XoxzoClient()
@@ -81,4 +81,19 @@ You can send sms or make a phone call with just a few line of python code.
 
 *Explanation*
 
-TBD.
+1. First, you need to create XoxzoClient() object. You must provide xoxzo sid and auth_token when initializing this object. You can get sid and auth_token after you sign up the xoxzo account and access the xoxzo dashboard.
+
+
+2. Then you can call call_simple_playback() method. You need to provide three parameters.
+
+  * recording_url: URL of the MP3 file you want to palyback.
+
+  * recipient: phone number of the call recipient. This must start with Japanese country code "+81" and follow the
+    `E.164 <https://en.wikipedia.org/wiki/E.164>`_ format.
+
+  * caller: this number will be displayed on the recipient device.
+
+  This method will return dictionary or list. If there is no error, list that contains the call-id will be returned.
+  You will need this id when checking the call status later.
+
+3. You can check the call status by get_simple_playback_status() method. You will provide call-id of the call you want to check.
