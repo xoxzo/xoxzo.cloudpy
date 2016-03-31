@@ -64,7 +64,6 @@ You can send sms or make a phone call with just a few line of python code.
 
   def sample_call_simple_playback():
       xc = XoxzoClient(sid="<your xoxzo sid>", auth_token="<your xoxzo auth_token>")
-      xc = XoxzoClient()
       result = xc.call_simple_playback(
           recipient = "+818012345678",
           recording_url = "http://example.com/sample.mp3",
