@@ -1,10 +1,11 @@
 # xoxzo api libirary
-"""
+
+'''
 This is the API library for Xoxzo's telephony service.
 http://docs.xoxzo.com/en/
 
 see http://docs.python-requests.org/en/master/ for requests library.
-"""
+'''
 
 import requests
 import os
@@ -17,21 +18,20 @@ __date__ = "30 March 2011"
 
 class XoxzoClient:
     '''
-    Base class to access Xoxzo API
+    Base class to access Xoxzo API.
 
-    :param string sid:  your sid of xoxzo account
-        if None, value of environment variable XOXZO_API_SID is used.
-
-    :param string auth_token: your auth_token of xoxzo account
-        if None, value of environment variable XOXZO_API_AUTH_TOKEN
-        is used.
-
+    :param string sid:  Your sid of the xoxzo account.
+        If None, value of the environment variable
+        XOXZO_API_SID will be used.
+    :param string auth_token: Your auth_token of the xoxzo account.
+        If None, value of the environment variable XOXZO_API_AUTH_TOKEN
+        will be used.
     '''
+
     def __init__(self, sid=None, auth_token=None):
         '''
-        initialize and instanceate XoxzoClient object
+        Initialize and instanceate XoxzoClient object.
         '''
-
         # you can override api host by setting envrionment
         # variable XOXZO_API_HOST
         api_host = os.environ.get("XOXZO_API_HOST")
@@ -56,12 +56,16 @@ class XoxzoClient:
 
     def send_sms(self, message, recipient, sender):
         '''
-        send sms to the recipient.
+        Send sms to the recipient.
 
-        :param string message: Message body
-        :param string recipient: Message recipient
-        :param string sender: Sender ID
+        :param string message: Message body.
+        :param string recipient: Message recipient.
+        :param string sender: Sender ID.
+        :return: list of message id when success,
+            dict of error reason when fail.
+        :rtype: dict or list.
         '''
+
         payload = {
             'message': message,
             'recipient': recipient,
@@ -74,22 +78,29 @@ class XoxzoClient:
 
     def get_sms_delivery_status(self, msgid):
         '''
-        get sms delivery status.
+        Get sms delivery status.
 
         :param string msgid: msgid of the return valun of send_sms() method.
+        :return: sms send status information.
+        :rtype: dict.
         '''
+
         url = self.xoxzo_api_sms_url + msgid
         response = requests.get(url, auth=(self.sid, self.auth_token))
         return response.json()
 
     def call_simple_playback(self, caller, recipient, recording_url):
         '''
-        make a phone call and play back MP3 sound file.
+        Make a phone call and playback MP3 sound file.
 
-        :param string caller: caller phone number
+        :param string caller: caller phone number.
         :param string recipient: Phone call recipient.
-        :param string recording_url: MP3 file URL
+        :param string recording_url: MP3 file URL.
+        :return: list of call id when success,
+            dict of error reason when fail.
+        :rtype: dict or list.
         '''
+
         payload = {
             'caller': caller,
             'recipient': recipient,
@@ -102,10 +113,12 @@ class XoxzoClient:
 
     def get_simple_playback_status(self, callid):
         '''
-        get simple palyback status.
+        Get simple palyback status.
 
         :param string callid: callid of the return valun of
             call_simple_playback() method.
+        :return: call playback status information.
+        :rtype: dict.
         '''
 
         url = self.xoxzo_api_voice_simple_url + callid
