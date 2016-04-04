@@ -22,25 +22,22 @@ class XoxzoClient:
 
     :param string sid:  Your sid of the xoxzo account.
     :param string auth_token: Your auth_token of the xoxzo account.
+    :param string api_host: If None, stadard xoxzo server will be used.
     '''
 
-    def __init__(self, sid, auth_token):
+    def __init__(self, sid, auth_token, api_host=None):
         '''
         Initialize and instanceate XoxzoClient object.
         '''
         self.sid = sid
         self.auth_token = auth_token
-        # you can override api host by setting envrionment
-        # variable XOXZO_API_HOST
-        api_host = os.environ.get("XOXZO_API_HOST")
-        if api_host is not None:
-            xoxzo_api_host = api_host
-        else:
-            xoxzo_api_host = "https://api.xoxzo.com"
 
-        self.xoxzo_api_sms_url = xoxzo_api_host + "/sms/messages/"
+        if api_host is None:
+            api_host = "https://api.xoxzo.com"
+
+        self.xoxzo_api_sms_url = api_host + "/sms/messages/"
         self.xoxzo_api_voice_simple_url = (
-            xoxzo_api_host + "/voice/simple/playback/")
+            api_host + "/voice/simple/playback/")
 
     def send_sms(self, message, recipient, sender):
         '''
