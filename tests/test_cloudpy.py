@@ -65,6 +65,20 @@ class TestXoxzoClient(unittest.TestCase):
             msgid="dabd8e76-390f-421c-87b5-57f31339d0c5")
         self.assertEqual(response, [])
 
+    def test_get_sms_list_success01(self):
+        response = self.xc.get_sms_list()
+        self.assertTrue(isinstance(response, list))
+
+    def test_get_sms_list_success02(self):
+        response = self.xc.get_sms_list(sent_date=">=2016-04-01")
+        self.assertTrue(isinstance(response, list))
+
+    def test_get_sms_list_fail01(self):
+        # bad date string
+        response = self.xc.get_sms_list(sent_date=">=2016-13-01")
+        self.assertTrue(isinstance(response, dict))
+        self.assertTrue('sent_date' in response)
+
     def test_call_simple_playback_fail01(self):
         # bad recipient
         response = self.xc.call_simple_playback(

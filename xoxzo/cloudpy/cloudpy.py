@@ -74,6 +74,24 @@ class XoxzoClient:
         response = requests.get(url, auth=(self.sid, self.auth_token))
         return response.json()
 
+    def get_sent_sms_list(self, sent_date=None):
+        '''
+        Get sent messages list
+
+        :param string sent_date: search condition date string.
+            see http://docs.xoxzo.com/en/sms.html#sent-messages-list-api.
+        :return: list of sms send status information.
+        :rtype: list.
+
+        '''
+        if sent_date is None:
+            url = self.xoxzo_api_sms_url
+        else:
+            url = self.xoxzo_api_sms_url + '?sent_date' + sent_date
+
+        response = requests.get(url, auth=(self.sid, self.auth_token))
+        return response.json()
+
     def call_simple_playback(self, caller, recipient, recording_url):
         '''
         Make a phone call and playback MP3 sound file.
