@@ -66,16 +66,16 @@ class TestXoxzoClient(unittest.TestCase):
         self.assertEqual(response, [])
 
     def test_get_sms_list_success01(self):
-        response = self.xc.get_sms_list()
+        response = self.xc.get_sent_sms_list()
         self.assertTrue(isinstance(response, list))
 
     def test_get_sms_list_success02(self):
-        response = self.xc.get_sms_list(sent_date=">=2016-04-01")
+        response = self.xc.get_sent_sms_list(sent_date=">=2016-04-01")
         self.assertTrue(isinstance(response, list))
 
     def test_get_sms_list_fail01(self):
         # bad date string
-        response = self.xc.get_sms_list(sent_date=">=2016-13-01")
+        response = self.xc.get_sent_sms_list(sent_date=">=2016-13-01")
         self.assertTrue(isinstance(response, dict))
         self.assertTrue('sent_date' in response)
 
@@ -99,4 +99,4 @@ class TestXoxzoClient(unittest.TestCase):
         print json.dumps(response, indent=4)
 
 if __name__ == "__main__":
-        unittest.main()
+    unittest.main()

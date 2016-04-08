@@ -82,8 +82,8 @@ class XoxzoClient:
             see http://docs.xoxzo.com/en/sms.html#sent-messages-list-api.
         :return: list of sms send status information.
         :rtype: list.
-
         '''
+
         if sent_date is None:
             url = self.xoxzo_api_sms_url
         else:
