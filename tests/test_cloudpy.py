@@ -23,12 +23,13 @@ class TestXoxzoClient(unittest.TestCase):
 
     @unittest.skip("skip this for now")
     def test_send_sms_success01(self):
-        response = self.xc.send_sms(
+        xoxzo_res = self.xc.send_sms(
             "Hello from Xoxzo",
             self.test_recipient,
             self.test_sender)
-        msgid = response[0]['msgid']
+        msgid = xoxzo_res.messages[0]['msgid']
         response = self.xc.get_sms_delivery_status(msgid)
+        self.assertEqual(response.errors, None)
         self.assertTrue('status' in response)
 
     @unittest.skip("skip this for now")
@@ -49,7 +50,8 @@ class TestXoxzoClient(unittest.TestCase):
             message="Hello from Xoxzo",
             recipient="+8108012345678",
             sender=self.test_sender)
-        self.assertTrue('detail' in response)
+        self.assertEqual(response.errors, 401)
+        self.assertTrue('detail' in response.message)
 
     def test_send_sms_fail01(self):
         # bad recipient
@@ -57,27 +59,29 @@ class TestXoxzoClient(unittest.TestCase):
             message="Hello from Xoxzo",
             recipient="+8108012345678",
             sender=self.test_sender)
-        self.assertTrue('recipient' in response)
+        self.assertEqual(response.errors, 400)
+        self.assertTrue('recipient' in response.message)
 
     def test_get_sms_delivery_status_fail01(self):
         # bad msgid
         response = self.xc.get_sms_delivery_status(
             msgid="dabd8e76-390f-421c-87b5-57f31339d0c5")
-        self.assertEqual(response, [])
+        self.assertEqual(response.errors, 404)
+        self.assertEqual(response.message, None)
 
     def test_get_sms_list_success01(self):
         response = self.xc.get_sent_sms_list()
-        self.assertTrue(isinstance(response, list))
+        self.assertEqual(response.errors, None)
 
     def test_get_sms_list_success02(self):
         response = self.xc.get_sent_sms_list(sent_date=">=2016-04-01")
-        self.assertTrue(isinstance(response, list))
+        self.assertEqual(response.errors, None)
 
     def test_get_sms_list_fail01(self):
         # bad date string
         response = self.xc.get_sent_sms_list(sent_date=">=2016-13-01")
-        self.assertTrue(isinstance(response, dict))
-        self.assertTrue('sent_date' in response)
+        self.assertEqual(response.errors, 400)
+        self.assertTrue('sent_date' in response.message)
 
     def test_call_simple_playback_fail01(self):
         # bad recipient

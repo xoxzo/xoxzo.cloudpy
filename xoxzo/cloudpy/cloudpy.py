@@ -16,6 +16,14 @@ __version__ = "0.1"
 __date__ = "30 March 2011"
 
 
+class XoxzoResponse:
+
+    def __init__(self, message={}, messages=[], errors=None):
+        self.message = message
+        self.messages = messages
+        self.errors = errors
+
+
 class XoxzoClient:
     '''
     Base class to access Xoxzo API.
@@ -46,20 +54,26 @@ class XoxzoClient:
         :param string message: Message body.
         :param string recipient: Message recipient.
         :param string sender: Sender ID.
-        :return: list of message id when success,
-            dict of error reason when fail.
-        :rtype: dict or list.
+        :return: TBD
+        :rtype: XoxzoResponse
         '''
 
         payload = {
             'message': message,
             'recipient': recipient,
             'sender': sender}
-        response = requests.post(
+        req_res = requests.post(
             self.xoxzo_api_sms_url,
             data=payload,
             auth=(self.sid, self.auth_token))
-        return response.json()
+        if req_res.status_code == 201:
+            # when success, return list
+            xr = XoxzoResponse(messages=req_res.json())
+        else:
+            xr = XoxzoResponse(
+                        errors=req_res.status_code,
+                        message=req_res.json())
+        return xr
 
     def get_sms_delivery_status(self, msgid):
         '''
@@ -67,12 +81,18 @@ class XoxzoClient:
 
         :param string msgid: msgid of the return valun of send_sms() method.
         :return: sms send status information.
-        :rtype: dict.
+        :rtype: XoxzoResponse.
         '''
 
         url = self.xoxzo_api_sms_url + msgid
-        response = requests.get(url, auth=(self.sid, self.auth_token))
-        return response.json()
+        req_res = requests.get(url, auth=(self.sid, self.auth_token))
+        if req_res.status_code == 200:
+            xr = XoxzoResponse(message=req_res.json())
+        else:
+            xr = XoxzoResponse(
+                        errors=req_res.status_code,
+                        message=req_res.json())
+        return xr
 
     def get_sent_sms_list(self, sent_date=None):
         '''
@@ -89,8 +109,14 @@ class XoxzoClient:
         else:
             url = self.xoxzo_api_sms_url + '?sent_date' + sent_date
 
-        response = requests.get(url, auth=(self.sid, self.auth_token))
-        return response.json()
+        req_res = requests.get(url, auth=(self.sid, self.auth_token))
+        if req_res.status_code == 200:
+            xr = XoxzoResponse(messages=req_res.json())
+        else:
+            xr = XoxzoResponse(
+                        errors=req_res.status_code,
+                        message=req_res.json())
+        return xr
 
     def call_simple_playback(self, caller, recipient, recording_url):
         '''
