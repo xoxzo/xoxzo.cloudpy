@@ -31,7 +31,7 @@ class TestXoxzoClient(unittest.TestCase):
         self.assertEqual(xoxzo_res.errors, 401)
         self.assertTrue('detail' in xoxzo_res.message)
 
-    def test_requests_exceeption(self):
+    def test_requests_exceeption_send_sms(self):
         # inject bad api url
         self.xc.xoxzo_api_sms_url="example.com"
 
@@ -41,7 +41,38 @@ class TestXoxzoClient(unittest.TestCase):
             self.test_sender)
         self.assertEqual(xoxzo_res.errors, XoxzoClient.REQUESTS_EXCEPITON)
 
-   # SMS Tests
+    def test_requests_exceeption_get_sms_delivery_status(self):
+        # inject bad api url
+        self.xc.xoxzo_api_sms_url = "example.com"
+
+        xoxzo_res = self.xc.get_sms_delivery_status("1234567890")
+        self.assertEqual(xoxzo_res.errors, XoxzoClient.REQUESTS_EXCEPITON)
+
+    def test_requests_exceeption_get_sent_sms_list(self):
+        # inject bad api url
+        self.xc.xoxzo_api_sms_url = "example.com"
+
+        xoxzo_res = self.xc.get_sent_sms_list()
+        self.assertEqual(xoxzo_res.errors, XoxzoClient.REQUESTS_EXCEPITON)
+
+    def test_requests_exceeption_call_simple_playback(self):
+        # inject bad api url
+        self.xc.xoxzo_api_voice_simple_url = "example.com"
+
+        xoxzo_res = self.xc.call_simple_playback(
+            self.test_sender,
+            self.test_recipient,
+            self.test_mp3_url)
+        self.assertEqual(xoxzo_res.errors, XoxzoClient.REQUESTS_EXCEPITON)
+
+    def test_requests_exceeption_get_simple_playback_status(self):
+        # inject bad api url
+        self.xc.xoxzo_api_voice_simple_url = "example.com"
+        xoxzo_res = self.xc.get_simple_playback_status(
+            callid="dabd8e76-390f-421c-87b5-57f31339d0c5")
+        self.assertEqual(xoxzo_res.errors, XoxzoClient.REQUESTS_EXCEPITON)
+
+    # SMS Tests
     @unittest.skip("skip this for now")
     def test_send_sms_success01(self):
         xoxzo_res = self.xc.send_sms(
