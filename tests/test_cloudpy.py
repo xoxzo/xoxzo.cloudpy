@@ -21,75 +21,78 @@ class TestXoxzoClient(unittest.TestCase):
         # print "Test sender: %s" % self.test_sender
         # print "Test MP3 url: %s" % self.test_mp3_url
 
-    @unittest.skip("skip this for now")
+    # Generic Tests
+    def test_bad_sid(self):
+        bad_xc = XoxzoClient(sid="123", auth_token="456")
+        xoxzo_res = bad_xc.send_sms(
+            message="Hello from Xoxzo",
+            recipient="+8108012345678",
+            sender=self.test_sender)
+        self.assertEqual(xoxzo_res.errors, 401)
+        self.assertTrue('detail' in xoxzo_res.message)
+
+    # SMS Tests
+    # @unittest.skip("skip this for now")
     def test_send_sms_success01(self):
         xoxzo_res = self.xc.send_sms(
             "Hello from Xoxzo",
             self.test_recipient,
             self.test_sender)
+        self.assertEqual(response.errors, None)
         msgid = xoxzo_res.messages[0]['msgid']
         response = self.xc.get_sms_delivery_status(msgid)
         self.assertEqual(response.errors, None)
-        self.assertTrue('status' in response)
-
-    @unittest.skip("skip this for now")
-    def test_call_simple_playback_success01(self):
-        response = self.xc.call_simple_playback(
-            self.test_sender,
-            self.test_recipient,
-            self.test_mp3_url)
-
-        callid = response[0]['callid']
-        response = self.xc.get_simple_playback_status(callid)
-        self.dump_response(response)
-        self.assertTrue('status' in response)
-
-    def test_bad_sid(self):
-        bad_xc = XoxzoClient(sid="123", auth_token="456")
-        response = bad_xc.send_sms(
-            message="Hello from Xoxzo",
-            recipient="+8108012345678",
-            sender=self.test_sender)
-        self.assertEqual(response.errors, 401)
-        self.assertTrue('detail' in response.message)
 
     def test_send_sms_fail01(self):
         # bad recipient
-        response = self.xc.send_sms(
+        xoxzo_res = self.xc.send_sms(
             message="Hello from Xoxzo",
             recipient="+8108012345678",
             sender=self.test_sender)
-        self.assertEqual(response.errors, 400)
-        self.assertTrue('recipient' in response.message)
+        self.assertEqual(xoxzo_res.errors, 400)
+        self.assertTrue('recipient' in xoxzo_res.message)
 
     def test_get_sms_delivery_status_fail01(self):
         # bad msgid
-        response = self.xc.get_sms_delivery_status(
+        xoxzo_res = self.xc.get_sms_delivery_status(
             msgid="dabd8e76-390f-421c-87b5-57f31339d0c5")
-        self.assertEqual(response.errors, 404)
-        self.assertEqual(response.message, None)
+        self.assertEqual(xoxzo_res.errors, 404)
+        self.assertEqual(xoxzo_res.message, None)
 
     def test_get_sms_list_success01(self):
-        response = self.xc.get_sent_sms_list()
-        self.assertEqual(response.errors, None)
+        xoxzo_res = self.xc.get_sent_sms_list()
+        self.assertEqual(xoxzo_res.errors, None)
 
     def test_get_sms_list_success02(self):
-        response = self.xc.get_sent_sms_list(sent_date=">=2016-04-01")
-        self.assertEqual(response.errors, None)
+        xoxzo_res = self.xc.get_sent_sms_list(sent_date=">=2016-04-01")
+        self.assertEqual(xoxzo_res.errors, None)
 
     def test_get_sms_list_fail01(self):
         # bad date string
-        response = self.xc.get_sent_sms_list(sent_date=">=2016-13-01")
-        self.assertEqual(response.errors, 400)
-        self.assertTrue('sent_date' in response.message)
+        xoxzo_res = self.xc.get_sent_sms_list(sent_date=">=2016-13-01")
+        self.assertEqual(xoxzo_res.errors, 400)
+        self.assertTrue('sent_date' in xoxzo_res.message)
+
+    # Voice Tests
+    # @unittest.skip("skip this for now")
+    def test_call_simple_playback_success01(self):
+        xoxzo_res = self.xc.call_simple_playback(
+            self.test_sender,
+            self.test_recipient,
+            self.test_mp3_url)
+        self.assertEqual(xoxzo_res.errors, None)
+        callid = xoxzo_res.messages[0]['callid']
+        xoxzo_res = self.xc.get_simple_playback_status(callid)
+        self.assertEqual(xoxzo_res.errors, None)
 
     def test_call_simple_playback_fail01(self):
         # bad recipient
-        response = self.xc.call_simple_playback(
+        xoxzo_res = self.xc.call_simple_playback(
             self.test_sender,
             "+8108012345678",
             self.test_mp3_url)
-        self.assertTrue('recipient' in response)
+        self.assertEqual(xoxzo_res.errors, 400)
+        self.assertTrue('recipient' in xoxzo_res)
 
     def test_get_simple_playback_status_fail01(self):
         # bad callid
@@ -100,7 +103,9 @@ class TestXoxzoClient(unittest.TestCase):
     def dump_response(self, response):
         print
         print type(response)
-        print json.dumps(response, indent=4)
+        print "errors:" + response.errors
+        print "message:\n" + json.dumps(response.message, indent=4)
+        print "messages:\n" + json.dumps(response.messages, indent=4)
 
 if __name__ == "__main__":
     unittest.main()

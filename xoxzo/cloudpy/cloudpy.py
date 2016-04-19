@@ -125,20 +125,25 @@ class XoxzoClient:
         :param string caller: caller phone number.
         :param string recipient: Phone call recipient.
         :param string recording_url: MP3 file URL.
-        :return: list of call id when success,
-            dict of error reason when fail.
-        :rtype: dict or list.
+        :return: TBD
+        :rtype: XoxzoResponse
         '''
 
         payload = {
             'caller': caller,
             'recipient': recipient,
             'recording_url': recording_url}
-        response = requests.post(
+        req_res = requests.post(
             self.xoxzo_api_voice_simple_url,
             data=payload,
             auth=(self.sid, self.auth_token))
-        return response.json()
+        if req_res.status_code == 201:
+            xr = XoxzoResponse(messages=req_res.json())
+        else:
+            xr = XoxzoResponse(
+                        errors=req_res.status_code,
+                        message=req_res.json())
+        return xr
 
     def get_simple_playback_status(self, callid):
         '''
@@ -151,5 +156,11 @@ class XoxzoClient:
         '''
 
         url = self.xoxzo_api_voice_simple_url + callid
-        response = requests.get(url, auth=(self.sid, self.auth_token))
-        return response.json()
+        req_res = requests.get(url, auth=(self.sid, self.auth_token))
+        if req_res.status_code == 200:
+            xr = XoxzoResponse(messages=req_res.json())
+        else:
+            xr = XoxzoResponse(
+                        errors=req_res.status_code,
+                        message=req_res.json())
+        return xr
