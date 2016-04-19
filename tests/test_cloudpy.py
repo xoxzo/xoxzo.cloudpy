@@ -32,13 +32,13 @@ class TestXoxzoClient(unittest.TestCase):
         self.assertTrue('detail' in xoxzo_res.message)
 
     # SMS Tests
-    # @unittest.skip("skip this for now")
+    @unittest.skip("skip this for now")
     def test_send_sms_success01(self):
         xoxzo_res = self.xc.send_sms(
             "Hello from Xoxzo",
             self.test_recipient,
             self.test_sender)
-        self.assertEqual(response.errors, None)
+        self.assertEqual(xoxzo_res.errors, None)
         msgid = xoxzo_res.messages[0]['msgid']
         response = self.xc.get_sms_delivery_status(msgid)
         self.assertEqual(response.errors, None)
@@ -57,6 +57,7 @@ class TestXoxzoClient(unittest.TestCase):
         xoxzo_res = self.xc.get_sms_delivery_status(
             msgid="dabd8e76-390f-421c-87b5-57f31339d0c5")
         self.assertEqual(xoxzo_res.errors, 404)
+        # currentry this asssertion fails due to bug
         self.assertEqual(xoxzo_res.message, None)
 
     def test_get_sms_list_success01(self):
@@ -74,7 +75,7 @@ class TestXoxzoClient(unittest.TestCase):
         self.assertTrue('sent_date' in xoxzo_res.message)
 
     # Voice Tests
-    # @unittest.skip("skip this for now")
+    @unittest.skip("skip this for now")
     def test_call_simple_playback_success01(self):
         xoxzo_res = self.xc.call_simple_playback(
             self.test_sender,
@@ -92,13 +93,15 @@ class TestXoxzoClient(unittest.TestCase):
             "+8108012345678",
             self.test_mp3_url)
         self.assertEqual(xoxzo_res.errors, 400)
-        self.assertTrue('recipient' in xoxzo_res)
+        self.assertTrue('recipient' in xoxzo_res.message)
 
     def test_get_simple_playback_status_fail01(self):
         # bad callid
-        response = self.xc.get_simple_playback_status(
+        xoxzo_res = self.xc.get_simple_playback_status(
             callid="dabd8e76-390f-421c-87b5-57f31339d0c5")
-        self.assertEqual(response, [])
+        self.assertEqual(xoxzo_res.errors, 404)
+        # currentry this asssertion fails due to bug
+        self.assertEqual(xoxzo_res.messages, None)
 
     def dump_response(self, response):
         print
