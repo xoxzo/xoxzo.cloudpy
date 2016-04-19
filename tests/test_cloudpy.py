@@ -31,7 +31,17 @@ class TestXoxzoClient(unittest.TestCase):
         self.assertEqual(xoxzo_res.errors, 401)
         self.assertTrue('detail' in xoxzo_res.message)
 
-    # SMS Tests
+    def test_requests_exceeption(self):
+        # inject bad api url
+        self.xc.xoxzo_api_sms_url="example.com"
+
+        xoxzo_res = self.xc.send_sms(
+            "Hello from Xoxzo",
+            self.test_recipient,
+            self.test_sender)
+        self.assertEqual(xoxzo_res.errors, XoxzoClient.REQUESTS_EXCEPITON)
+
+   # SMS Tests
     @unittest.skip("skip this for now")
     def test_send_sms_success01(self):
         xoxzo_res = self.xc.send_sms(
