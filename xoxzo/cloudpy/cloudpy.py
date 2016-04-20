@@ -32,7 +32,7 @@ class XoxzoClient:
     '''
     Base class to access Xoxzo API.
 
-    :param string sid:  Your sid of the xoxzo account.
+    :param string sid: Your sid of the xoxzo account.
     :param string auth_token: Your auth_token of the xoxzo account.
     :param string api_host: If None, stadard xoxzo server will be used.
     '''
@@ -59,7 +59,9 @@ class XoxzoClient:
         :param string message: Message body.
         :param string recipient: Message recipient.
         :param string sender: Sender ID.
-        :return: TBD
+        :return: if XoxzoResponse.errors == None, list of message ids are returned in XoxzoResponse.messages.
+            otherwise, error coed is retruned in XoxzoResponse.errors and detailed error message is set in
+            XoxzoResponse.message.
         :rtype: XoxzoResponse
         '''
 
@@ -90,8 +92,8 @@ class XoxzoClient:
         Get sms delivery status.
 
         :param string msgid: msgid of the return valun of send_sms() method.
-        :return: sms send status information.
-        :rtype: XoxzoResponse.
+        :return: TBD
+        :rtype: XoxzoResponse
         '''
 
         try:
@@ -115,9 +117,10 @@ class XoxzoClient:
 
         :param string sent_date: search condition date string.
             see http://docs.xoxzo.com/en/sms.html#sent-messages-list-api.
-        :return: list of sms send status information.
-        :rtype: list.
+        :return: TBD
+        :rtype: XoxzoResponse
         '''
+
         try:
             if sent_date is None:
                 url = self.xoxzo_api_sms_url
@@ -175,15 +178,15 @@ class XoxzoClient:
 
         :param string callid: callid of the return valun of
             call_simple_playback() method.
-        :return: call playback status information.
-        :rtype: dict.
+        :return: TBD
+        :rtype: XoxzoResponse.
         '''
 
         try:
             url = self.xoxzo_api_voice_simple_url + callid
             req_res = requests.get(url, auth=(self.sid, self.auth_token))
             if req_res.status_code == 200:
-                xr = XoxzoResponse(messages=req_res.json())
+                xr = XoxzoResponse(message=req_res.json())
             else:
                 xr = XoxzoResponse(
                             errors=req_res.status_code,

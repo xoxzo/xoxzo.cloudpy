@@ -30,6 +30,7 @@ class TestXoxzoClient(unittest.TestCase):
             sender=self.test_sender)
         self.assertEqual(xoxzo_res.errors, 401)
         self.assertTrue('detail' in xoxzo_res.message)
+        self.assertEqual(xoxzo_res.messages, [])
 
     def test_requests_exceeption_send_sms(self):
         # inject bad api url
@@ -40,6 +41,9 @@ class TestXoxzoClient(unittest.TestCase):
             self.test_recipient,
             self.test_sender)
         self.assertEqual(xoxzo_res.errors, XoxzoClient.REQUESTS_EXCEPITON)
+        print xoxzo_res.message
+        self.assertTrue('detail' in xoxzo_res.message)
+        self.assertEqual(xoxzo_res.messages, [])
 
     def test_requests_exceeption_get_sms_delivery_status(self):
         # inject bad api url
