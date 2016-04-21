@@ -9,6 +9,7 @@ see http://docs.python-requests.org/en/master/ for requests library.
 
 import requests
 import os
+import json
 
 __author__ = "Akira Nonaka <nonaka@mac.com>"
 __status__ = "development"
@@ -82,7 +83,7 @@ class XoxzoClient:
                         errors=req_res.status_code,
                         message=req_res.json())
         except requests.exceptions.RequestException as e:
-            xr =  XoxzoResponse(errors=XoxzoClient.REQUESTS_EXCEPITON, message=e)
+            xr =  XoxzoResponse(errors=XoxzoClient.REQUESTS_EXCEPITON, message= {"http_error":e})
         finally:
             return xr
 
@@ -107,7 +108,7 @@ class XoxzoClient:
                             message=req_res.json())
 
         except requests.exceptions.RequestException as e:
-            xr = XoxzoResponse(errors=XoxzoClient.REQUESTS_EXCEPITON, message=e)
+            xr = XoxzoResponse(errors=XoxzoClient.REQUESTS_EXCEPITON, message= {"http_error":e})
         finally:
             return xr
 
@@ -136,7 +137,7 @@ class XoxzoClient:
                             message=req_res.json())
 
         except requests.exceptions.RequestException as e:
-            xr = XoxzoResponse(errors=XoxzoClient.REQUESTS_EXCEPITON, message=e)
+            xr = XoxzoResponse(errors=XoxzoClient.REQUESTS_EXCEPITON, message= {"http_error":e})
         finally:
             return xr
 
@@ -168,7 +169,7 @@ class XoxzoClient:
                             message=req_res.json())
 
         except requests.exceptions.RequestException as e:
-            xr = XoxzoResponse(errors=XoxzoClient.REQUESTS_EXCEPITON, message=e)
+            xr = XoxzoResponse(errors=XoxzoClient.REQUESTS_EXCEPITON, message= {"http_error":e})
         finally:
             return xr
 
@@ -193,6 +194,6 @@ class XoxzoClient:
                             message=req_res.json())
 
         except requests.exceptions.RequestException as e:
-            xr = XoxzoResponse(errors=XoxzoClient.REQUESTS_EXCEPITON, message=e)
+            xr = XoxzoResponse(errors=XoxzoClient.REQUESTS_EXCEPITON, message= {"http_error":e})
         finally:
             return xr
