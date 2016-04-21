@@ -48,7 +48,7 @@ You can send sms or make a phone call with just a few line of python code.
   * sender: this number will be displayed on the recipient device.
 
   This method will return XoxzoResponse object. If XoxzoResponse.errors == None, XoxzoResponse.messages[0]['msgid']
-  is the meesage id that you can use get_sms_delivery_status() call.
+  is the meesage id that you can pass to the  get_sms_delivery_status() call.
 
 3. You can check the sms delivery status by get_sms_delivery_status() method. You will provide message-id of the sms you want to check.
 
@@ -87,7 +87,7 @@ You can send sms or make a phone call with just a few line of python code.
   * caller: this number will be displayed on the recipient device.
 
   This method will return XoxzoResponse object. If XoxzoResponse.errors == None, XoxzoResponse.messages[0]['callid']
-  is the meesage id that you can use get_sms_delivery_status() call.
+  is the meesage id that you can pass to the get_sms_delivery_status() call.
 
 
 3. You can check the call status by get_simple_playback_status() method. You will provide call-id of the call you want to check.
