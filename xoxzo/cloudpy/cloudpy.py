@@ -8,8 +8,6 @@ see http://docs.python-requests.org/en/master/ for requests library.
 '''
 
 import requests
-import os
-import json
 
 __author__ = "Akira Nonaka <nonaka@mac.com>"
 __status__ = "development"
@@ -37,6 +35,7 @@ class XoxzoClient:
     :param string auth_token: Your auth_token of the xoxzo account.
     :param string api_host: If None, stadard xoxzo server will be used.
     '''
+    # This value will be set in XoxzoClient.errors when Requests throw exception.
     REQUESTS_EXCEPITON = 499
 
     def __init__(self, sid, auth_token, api_host=None):
@@ -66,50 +65,52 @@ class XoxzoClient:
         :rtype: XoxzoResponse
         '''
 
+        payload = {
+            'message': message,
+            'recipient': recipient,
+            'sender': sender}
         try:
-            payload = {
-                'message': message,
-                'recipient': recipient,
-                'sender': sender}
             req_res = requests.post(
-            self.xoxzo_api_sms_url,
-            data=payload,
-            auth=(self.sid, self.auth_token))
+                self.xoxzo_api_sms_url,
+                data=payload,
+                auth=(self.sid, self.auth_token))
+        except requests.exceptions.RequestException as e:
+            xr =  XoxzoResponse(errors=XoxzoClient.REQUESTS_EXCEPITON, message= {"http_error":e})
+            return xr
+        else:
             if req_res.status_code == 201:
-            # when success, return list
+                # when success, return list
                 xr = XoxzoResponse(messages=req_res.json())
             else:
                 xr = XoxzoResponse(
-                        errors=req_res.status_code,
-                        message=req_res.json())
-        except requests.exceptions.RequestException as e:
-            xr =  XoxzoResponse(errors=XoxzoClient.REQUESTS_EXCEPITON, message= {"http_error":e})
-        finally:
+                    errors=req_res.status_code,
+                    message=req_res.json())
             return xr
-
 
     def get_sms_delivery_status(self, msgid):
         '''
         Get sms delivery status.
 
-        :param string msgid: msgid of the return valun of send_sms() method.
-        :return: TBD
+        :param string msgid: msgid of the return value of send_sms() method.
+        :return: if XoxzoResponse.errors == None, list of message ids are returned in XoxzoResponse.messages.
+            otherwise, error coed is retruned in XoxzoResponse.errors and detailed error message is set in
+            XoxzoResponse.message.
         :rtype: XoxzoResponse
         '''
 
+        url = self.xoxzo_api_sms_url + msgid
         try:
-            url = self.xoxzo_api_sms_url + msgid
             req_res = requests.get(url, auth=(self.sid, self.auth_token))
+        except requests.exceptions.RequestException as e:
+            xr = XoxzoResponse(errors=XoxzoClient.REQUESTS_EXCEPITON, message= {"http_error":e})
+            return xr
+        else:
             if req_res.status_code == 200:
                 xr = XoxzoResponse(message=req_res.json())
             else:
                 xr = XoxzoResponse(
-                            errors=req_res.status_code,
-                            message=req_res.json())
-
-        except requests.exceptions.RequestException as e:
-            xr = XoxzoResponse(errors=XoxzoClient.REQUESTS_EXCEPITON, message= {"http_error":e})
-        finally:
+                    errors=req_res.status_code,
+                    message=req_res.json())
             return xr
 
     def get_sent_sms_list(self, sent_date=None):
@@ -118,27 +119,28 @@ class XoxzoClient:
 
         :param string sent_date: search condition date string.
             see http://docs.xoxzo.com/en/sms.html#sent-messages-list-api.
-        :return: TBD
+        :return: if XoxzoResponse.errors == None, list of message ids are returned in XoxzoResponse.messages.
+            otherwise, error coed is retruned in XoxzoResponse.errors and detailed error message is set in
+            XoxzoResponse.message.
         :rtype: XoxzoResponse
         '''
 
+        if sent_date is None:
+            url = self.xoxzo_api_sms_url
+        else:
+            url = self.xoxzo_api_sms_url + '?sent_date' + sent_date
         try:
-            if sent_date is None:
-                url = self.xoxzo_api_sms_url
-            else:
-                url = self.xoxzo_api_sms_url + '?sent_date' + sent_date
-
             req_res = requests.get(url, auth=(self.sid, self.auth_token))
+        except requests.exceptions.RequestException as e:
+            xr = XoxzoResponse(errors=XoxzoClient.REQUESTS_EXCEPITON, message={"http_error": e})
+            return xr
+        else:
             if req_res.status_code == 200:
                 xr = XoxzoResponse(messages=req_res.json())
             else:
                 xr = XoxzoResponse(
-                            errors=req_res.status_code,
-                            message=req_res.json())
-
-        except requests.exceptions.RequestException as e:
-            xr = XoxzoResponse(errors=XoxzoClient.REQUESTS_EXCEPITON, message= {"http_error":e})
-        finally:
+                    errors=req_res.status_code,
+                    message=req_res.json())
             return xr
 
     def call_simple_playback(self, caller, recipient, recording_url):
@@ -148,52 +150,57 @@ class XoxzoClient:
         :param string caller: caller phone number.
         :param string recipient: Phone call recipient.
         :param string recording_url: MP3 file URL.
-        :return: TBD
+        :return: if XoxzoResponse.errors == None, list of message ids are returned in XoxzoResponse.messages.
+            otherwise, error coed is retruned in XoxzoResponse.errors and detailed error message is set in
+            XoxzoResponse.message.
         :rtype: XoxzoResponse
         '''
 
+        payload = {
+            'caller': caller,
+            'recipient': recipient,
+            'recording_url': recording_url}
+
         try:
-            payload = {
-                'caller': caller,
-                'recipient': recipient,
-                'recording_url': recording_url}
             req_res = requests.post(
                 self.xoxzo_api_voice_simple_url,
                 data=payload,
                 auth=(self.sid, self.auth_token))
+        except requests.exceptions.RequestException as e:
+            xr = XoxzoResponse(errors=XoxzoClient.REQUESTS_EXCEPITON, message= {"http_error":e})
+            return xr
+        else:
             if req_res.status_code == 201:
                 xr = XoxzoResponse(messages=req_res.json())
             else:
                 xr = XoxzoResponse(
-                            errors=req_res.status_code,
-                            message=req_res.json())
-
-        except requests.exceptions.RequestException as e:
-            xr = XoxzoResponse(errors=XoxzoClient.REQUESTS_EXCEPITON, message= {"http_error":e})
-        finally:
+                    errors=req_res.status_code,
+                    message=req_res.json())
             return xr
 
     def get_simple_playback_status(self, callid):
         '''
         Get simple palyback status.
 
-        :param string callid: callid of the return valun of
+        :param string callid: callid of the return value of
             call_simple_playback() method.
-        :return: TBD
+        :return: if XoxzoResponse.errors == None, list of message ids are returned in XoxzoResponse.messages.
+            otherwise, error coed is retruned in XoxzoResponse.errors and detailed error message is set in
+            XoxzoResponse.message.
         :rtype: XoxzoResponse.
         '''
 
+        url = self.xoxzo_api_voice_simple_url + callid
         try:
-            url = self.xoxzo_api_voice_simple_url + callid
             req_res = requests.get(url, auth=(self.sid, self.auth_token))
+        except requests.exceptions.RequestException as e:
+            xr = XoxzoResponse(errors=XoxzoClient.REQUESTS_EXCEPITON, message= {"http_error":e})
+            return xr
+        else:
             if req_res.status_code == 200:
                 xr = XoxzoResponse(message=req_res.json())
             else:
                 xr = XoxzoResponse(
-                            errors=req_res.status_code,
-                            message=req_res.json())
-
-        except requests.exceptions.RequestException as e:
-            xr = XoxzoResponse(errors=XoxzoClient.REQUESTS_EXCEPITON, message= {"http_error":e})
-        finally:
+                    errors=req_res.status_code,
+                    message=req_res.json())
             return xr

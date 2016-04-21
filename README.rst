@@ -14,25 +14,22 @@ via Xoxzo telephony API. This is the open source package with MIT LICENSE.
 
 *Send sms*::
 
-  import json
-  from xoxzo.cloudpy import XoxzoClient
+ def sample_send_sms():
+    xc = XoxzoClient(sid="<your xoxzo sid>", auth_token="<your xoxzo auth_token>")
+    result = xc.send_sms(
+        message = "Hello from Xoxzo",
+        recipient = "+818012345678",
+        sender = "818011112222")
+    if result.errors != None:
+        # some error happed
+        print json.dumps(result.message, indent=4)
+    else:
+        # check messge delivery status
+        msgid = result.messages[0]['msgid']
+        result = xc.get_sms_delivery_status(msgid)
+        print json.dumps(result.message, indent=4)
 
-  # sample 01 send sms
-  def sample_send_sms():
-      xc = XoxzoClient(sid="<your xoxzo sid>", auth_token="<your xoxzo auth_token>")
-      result = xc.send_sms(
-          message = "Hello from Xoxzo",
-          recipient = "+818012345678",
-          sender = "818011112222")
-      if not isinstance(result,list):
-          print "*** Error ***"
-          print result['detail']
-          return
-      msgid = result[0]['msgid']
-      result = xc.get_sms_delivery_status(msgid)
-      print json.dumps(result, indent=4)
-
-  sample_send_sms()
+sample_send_sms()
 
 *Explanation*
 
@@ -50,8 +47,8 @@ You can send sms or make a phone call with just a few line of python code.
 
   * sender: this number will be displayed on the recipient device.
 
-  This method will return dictionary or list. If there is no error, list that contains the message-id will be returned.
-  You will need this id when checking the delivery status later.
+  This method will return XoxzoResponse object. If XoxzoResponse.errors == None, XoxzoResponse.messages[0]['msgid']
+  is the meesage id that you can use get_sms_delivery_status() call.
 
 3. You can check the sms delivery status by get_sms_delivery_status() method. You will provide message-id of the sms you want to check.
 
@@ -59,24 +56,21 @@ You can send sms or make a phone call with just a few line of python code.
 
 *Make a phone call and playback MP3 file*::
 
-  import json
-  from xoxzo.cloudpy import XoxzoClient
+ def sample_call_simple_playback():
 
-  def sample_call_simple_playback():
-      xc = XoxzoClient(sid="<your xoxzo sid>", auth_token="<your xoxzo auth_token>")
-      result = xc.call_simple_playback(
-          recipient = "+818012345678",
-          recording_url = "http://example.com/sample.mp3",
-          caller = "818011112222")
-      if not isinstance(result,list):
-          print "*** Error ***"
-          print result['detail']
-          return
-      callid = result[0]['callid']
-      result = xc.get_simple_playback_status(callid)
-      print json.dumps(result, indent=4)
+    xc = XoxzoClient(sid="<your xoxzo sid>", auth_token="<your xoxzo auth_token>")
+    result = xc.call_simple_playback(
+        recipient="+818012345678",
+        recording_url="http://example.com/sample.mp3",
+        caller="818011112222")
 
-  sample_call_simple_playback()
+    if result.errors != None:
+        # some error happed
+        print json.dumps(result.message, indent=4)
+    else:
+        callid = result.messages[0]['callid']
+        result = xc.get_simple_playback_status(callid)
+        print json.dumps(result.message, indent=4)
 
 *Explanation*
 
@@ -92,7 +86,8 @@ You can send sms or make a phone call with just a few line of python code.
 
   * caller: this number will be displayed on the recipient device.
 
-  This method will return dictionary or list. If there is no error, list that contains the call-id will be returned.
-  You will need this id when checking the call status later.
+  This method will return XoxzoResponse object. If XoxzoResponse.errors == None, XoxzoResponse.messages[0]['callid']
+  is the meesage id that you can use get_sms_delivery_status() call.
+
 
 3. You can check the call status by get_simple_playback_status() method. You will provide call-id of the call you want to check.

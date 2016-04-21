@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-import unittest
 import json
 import os
-import requests
+import unittest
 
 from xoxzo.cloudpy import XoxzoClient
 
@@ -116,7 +115,7 @@ class TestXoxzoClient(unittest.TestCase):
         xoxzo_res = self.xc.get_sms_delivery_status(
             msgid="dabd8e76-390f-421c-87b5-57f31339d0c5")
         self.assertEqual(xoxzo_res.errors, 404)
-        # currentry this asssertion fails due to bug
+        # todo: currentry this asssertion fails due to bug X4CTBE-112
         self.assertEqual(xoxzo_res.message, None)
         self.assertEqual(xoxzo_res.messages, [])
 
@@ -171,8 +170,8 @@ class TestXoxzoClient(unittest.TestCase):
         xoxzo_res = self.xc.get_simple_playback_status(
             callid="dabd8e76-390f-421c-87b5-57f31339d0c5")
         self.assertEqual(xoxzo_res.errors, 404)
-        # currentry this asssertion fails due to bug
-        self.assertEqual(xoxzo_res.messages, None)
+        # todo: currentry this asssertion fails due to bug X4CTBE-113
+        self.assertEqual(xoxzo_res.message, None)
         self.assertEqual(xoxzo_res.messages, [])
 
     def dump_response(self, response):
