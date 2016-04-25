@@ -29,7 +29,6 @@ via Xoxzo telephony API. This is the open source package with MIT LICENSE.
         result = xc.get_sms_delivery_status(msgid)
         print json.dumps(result.message, indent=4)
 
-sample_send_sms()
 
 *Explanation*
 
