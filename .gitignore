@@ -1,0 +1,7 @@
+*.html
+*.pyc
+/xoxzo.cloudpy.egg-info
+/.eggs
+/dist
+_build
+build
