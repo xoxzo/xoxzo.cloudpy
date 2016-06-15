@@ -51,6 +51,7 @@ class XoxzoClient:
         self.xoxzo_api_sms_url = api_host + "/sms/messages/"
         self.xoxzo_api_voice_simple_url = (
             api_host + "/voice/simple/playback/")
+        self.xoxzo_api_dins_url = api_host + "/voice/dins/"
 
     def send_sms(self, message, recipient, sender):
         '''
@@ -199,6 +200,34 @@ class XoxzoClient:
         else:
             if req_res.status_code == 200:
                 xr = XoxzoResponse(message=req_res.json())
+            elif req_res.status_code == 404:
+                # todo: is this really ok???
+                xr = XoxzoResponse(errors=req_res.status_code)
+            else:
+                xr = XoxzoResponse(
+                    errors=req_res.status_code,
+                    message=req_res.json())
+            return xr
+
+    def get_din_list(self, search_string=None):
+        """
+        get din list
+
+        :param search_string:
+        :return:
+        """
+        if search_string == None:
+            url = self.xoxzo_api_dins_url
+        else:
+            url = self.xoxzo_api_dins_url + '?' + search_string
+        try:
+            req_res = requests.get(url, auth=(self.sid, self.auth_token))
+        except requests.exceptions.RequestException as e:
+            xr = XoxzoResponse(errors=XoxzoClient.REQUESTS_EXCEPITON, message={"http_error": e})
+            return xr
+        else:
+            if req_res.status_code == 200:
+                xr = XoxzoResponse(messages=req_res.json())
             else:
                 xr = XoxzoResponse(
                     errors=req_res.status_code,
