@@ -193,10 +193,44 @@ class TestXoxzoClientTestCase(unittest.TestCase):
     def test_get_din_list_fail01(self):
         xoxzo_res = self.xc.get_din_list(search_string="foo=bar")
         self.assertEqual(xoxzo_res.errors, 400)
+
+    def test_subscrige_and_unsubscribe(self):
+        xoxzo_res = self.xc.get_subscription_list()
+        self.assertEqual(xoxzo_res.errors, None)
+        # assume subscripti count 0
+        self.assertEqual(len(xoxzo_res.messages), 0)
+
+        xoxzo_res = self.xc.get_din_list()
         # self.dump_response(xoxzo_res)
+        self.assertEqual(xoxzo_res.errors, None)
+        din_uid = xoxzo_res.messages[0]['din_uid']
+
+        xoxzo_res = self.xc.subscribe_din(din_uid=din_uid)
+        self.assertEqual(xoxzo_res.errors, None)
+
+        xoxzo_res = self.xc.get_subscription_list()
+        self.assertEqual(xoxzo_res.errors, None)
+        # assume subscripti count 1
+        self.assertEqual(len(xoxzo_res.messages), 1)
+
+        xoxzo_res = self.xc.unsubscribe_din(din_uid=din_uid)
+        self.assertEqual(xoxzo_res.errors, None)
+
+        xoxzo_res = self.xc.get_subscription_list()
+        self.assertEqual(xoxzo_res.errors, None)
+        # assume subscripti count 0
+        self.assertEqual(len(xoxzo_res.messages), 0)
+
+    def test_subscribe_din_fail01(self):
+        xoxzo_res = self.xc.subscribe_din(din_uid='0123456789')
+        self.assertEqual(xoxzo_res.errors, 400)
+
+    def test_unsubscribe_din_fail01(self):
+        xoxzo_res = self.xc.unsubscribe_din(din_uid='0123456789')
+        self.assertEqual(xoxzo_res.errors, 404)
 
     def dump_response(self, response):
-        print("===== DUMP RESPONSE =====")
+        print("\n===== DUMP RESPONSE =====")
         if (response.errors != None):
             print("errors:" + str(response.errors))
         print("message:\n" + self.my_json_dumps(response.message))
@@ -205,7 +239,6 @@ class TestXoxzoClientTestCase(unittest.TestCase):
     def my_json_dumps(self, data):
         if (data != None):
             return json.dumps(data, indent=4)
-
 
 if __name__ == "__main__":
     unittest.main()
