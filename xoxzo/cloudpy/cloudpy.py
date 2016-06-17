@@ -201,7 +201,6 @@ class XoxzoClient:
             if req_res.status_code == 200:
                 xr = XoxzoResponse(message=req_res.json())
             elif req_res.status_code == 404:
-                # todo: is this really ok???
                 xr = XoxzoResponse(errors=req_res.status_code)
             else:
                 xr = XoxzoResponse(
@@ -228,7 +227,6 @@ class XoxzoClient:
             if req_res.status_code == 200:
                 xr = XoxzoResponse(messages=req_res.json())
             elif req_res.status_code == 404:
-                # todo: is this really ok???
                 xr = XoxzoResponse(errors=req_res.status_code)
             else:
                 xr = XoxzoResponse(
@@ -259,7 +257,6 @@ class XoxzoClient:
             if req_res.status_code == 201:
                 xr = XoxzoResponse(messages=req_res.json())
             elif req_res.status_code == 404:
-                # todo: is this really ok???
                 xr = XoxzoResponse(errors=req_res.status_code)
             else:
                 xr = XoxzoResponse(
@@ -273,7 +270,7 @@ class XoxzoClient:
         :param din_uid:
         :return:
         """
-        url = self.xoxzo_api_dins_url + 'subscriptions/' + din_uid
+        url = self.xoxzo_api_dins_url + 'subscriptions/' + din_uid + '/'
 
         try:
             req_res = requests.delete(url, auth=(self.sid, self.auth_token))
@@ -284,7 +281,6 @@ class XoxzoClient:
             if req_res.status_code == 200:
                 xr = XoxzoResponse()
             elif req_res.status_code == 404:
-                # todo: is this really ok???
                 xr = XoxzoResponse(errors=req_res.status_code)
             else:
                 xr = XoxzoResponse(
@@ -294,7 +290,7 @@ class XoxzoClient:
 
     def get_subscription_list(self):
         """
-
+        Get the list of the current subscribed DINs
         :return:
         """
         url = self.xoxzo_api_dins_url + 'subscriptions/'
@@ -308,7 +304,38 @@ class XoxzoClient:
             if req_res.status_code == 200:
                 xr = XoxzoResponse(messages=req_res.json())
             elif req_res.status_code == 404:
-                # todo: is this really ok???
+                xr = XoxzoResponse(errors=req_res.status_code)
+            else:
+                xr = XoxzoResponse(
+                    errors=req_res.status_code,
+                    message=req_res.json())
+            return xr
+
+    def set_action_url(self, din_uid, action_url):
+        """
+        set action url to the din_uid
+        :param din_uid:
+        :param action_url:
+        :return:
+        """
+        url = self.xoxzo_api_dins_url + 'subscriptions/' + din_uid + '/'
+
+        payload = {
+            'action_url': action_url
+        }
+
+        try:
+            req_res = requests.post(url,
+                                    data=payload,
+                                    auth=(self.sid, self.auth_token))
+        except requests.exceptions.RequestException as e:
+            xr = XoxzoResponse(errors=XoxzoClient.REQUESTS_EXCEPITON, message={"http_error": e})
+            return xr
+        else:
+            if req_res.status_code == 200:
+                # set action url returns empty body when success
+                xr = XoxzoResponse()
+            elif req_res.status_code == 404:
                 xr = XoxzoResponse(errors=req_res.status_code)
             else:
                 xr = XoxzoResponse(

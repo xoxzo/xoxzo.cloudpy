@@ -115,9 +115,6 @@ class TestXoxzoClientTestCase(unittest.TestCase):
         xoxzo_res = self.xc.get_sms_delivery_status(
             msgid="dabd8e76-390f-421c-87b5-57f31339d0c5")
         self.assertEqual(xoxzo_res.errors, 404)
-        # todo: currentry this asssertion fails due to bug X4CTBE-112
-        # self.assertEqual(xoxzo_res.message, None)
-        # self.assertEqual(xoxzo_res.messages, [])
 
     def test_get_sms_list_success01(self):
         xoxzo_res = self.xc.get_sent_sms_list()
@@ -170,9 +167,7 @@ class TestXoxzoClientTestCase(unittest.TestCase):
         xoxzo_res = self.xc.get_simple_playback_status(
             callid="dabd8e76-390f-421c-87b5-57f31339d0c5")
         self.assertEqual(xoxzo_res.errors, 404)
-        # todo: currentry this asssertion fails due to bug X4CTBE-113
-        # self.assertEqual(xoxzo_res.message, None)
-        self.assertEqual(xoxzo_res.messages, [])
+
 
     def test_get_din_list_success(self):
         xoxzo_res = self.xc.get_din_list()
@@ -195,13 +190,19 @@ class TestXoxzoClientTestCase(unittest.TestCase):
         self.assertEqual(xoxzo_res.errors, 400)
 
     def test_subscrige_and_unsubscribe(self):
+        # todo: make sure all subscrion made ducring test is unsubscribed
+        """
+        This test is a bit risky since it may leave a DIN beeing subscribed
+        when test fails during the execution.
+
+        :return:
+        """
         xoxzo_res = self.xc.get_subscription_list()
         self.assertEqual(xoxzo_res.errors, None)
         # assume subscripti count 0
         self.assertEqual(len(xoxzo_res.messages), 0)
 
         xoxzo_res = self.xc.get_din_list()
-        # self.dump_response(xoxzo_res)
         self.assertEqual(xoxzo_res.errors, None)
         din_uid = xoxzo_res.messages[0]['din_uid']
 
@@ -212,6 +213,10 @@ class TestXoxzoClientTestCase(unittest.TestCase):
         self.assertEqual(xoxzo_res.errors, None)
         # assume subscripti count 1
         self.assertEqual(len(xoxzo_res.messages), 1)
+
+        dummy_action_url = 'http://example.com/dummy_action'
+        xoxzo_res = self.xc.set_action_url(din_uid=din_uid, action_url=dummy_action_url)
+        self.assertEqual(xoxzo_res.errors, None)
 
         xoxzo_res = self.xc.unsubscribe_din(din_uid=din_uid)
         self.assertEqual(xoxzo_res.errors, None)
