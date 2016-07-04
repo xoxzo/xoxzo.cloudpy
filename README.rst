@@ -1,6 +1,6 @@
-=====================================
+=================================
 Xoxzo Cloud API Client for Python
-=====================================
+=================================
 
 This is the official client and implementation reference to talk to `Xoxzo's Cloud Communication API <https://www.xoxzo.com/en/>`_.
 For detailed documentation on the API itself, you can refer to the `documentation <http://docs.xoxzo.com/en/>`_
@@ -91,6 +91,14 @@ You can send sms or make a phone call with just a few line of python code.
 
 3. You can check the call status by get_simple_playback_status() method. You will provide call-id of the call you want to check.
 
+*Check SMS sent status*::
+
+ xoxzo_res = self.xc.get_sent_sms_list(sent_date=">=2016-13-01")
+
+*Explanation*
+
+You can check sent SMS status spcifying a certain date. You can use comparison operators such as "<=,<,=,>,>="
+
 **Sample Code 3**
 
 *Subscribe DIN*::
@@ -116,4 +124,4 @@ You can send sms or make a phone call with just a few line of python code.
 *Explanation*
 
 1. Once you suscribede the DIN, you can set action url to the DIN. This URL will be called in the event of the DIN gets called.
-The URL will called by GET method with the parameter, caller and recipient.
+The URL will called by http GET method with the parameters, caller and recipient.
