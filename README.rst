@@ -90,3 +90,23 @@ You can send sms or make a phone call with just a few line of python code.
 
 
 3. You can check the call status by get_simple_playback_status() method. You will provide call-id of the call you want to check.
+
+**Sample Code 3**
+
+* Subscribe DIN
+
+
+ xc = XoxzoClient(sid="<your xoxzo sid>", auth_token="<your xoxzo auth_token>")
+ xoxzo_res = xc.get_din_list()
+ din_uid = xoxzo_res.messages[0]['din_uid']
+ xoxzo_res = xc.subscribe_din(din_uid=din_uid)
+
+
+*Explanation*
+
+1. In order to subsucribe DIN, you must find available unsubscribed DINs using get_din_lsit() method.
+
+2. The you subscribe a DIN via subscribe_din() method specifying din uniq id.
+
+* Set action URL
+
