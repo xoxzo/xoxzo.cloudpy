@@ -108,6 +108,8 @@ class XoxzoClient:
         else:
             if req_res.status_code == 200:
                 xr = XoxzoResponse(message=req_res.json())
+            elif req_res.status_code == 404:
+                xr = XoxzoResponse(errors=req_res.status_code)
             else:
                 xr = XoxzoResponse(
                     errors=req_res.status_code,

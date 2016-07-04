@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import datetime
 import json
 import os
 import unittest
@@ -7,12 +8,19 @@ from xoxzo.cloudpy import XoxzoClient
 
 
 class TestXoxzoClientTestCase(unittest.TestCase):
+    def getenv_with_none_check(self, env):
+        val = os.environ.get(env)
+        if val == None:
+            raise Exception("Environment variable %s must be set" % env)
+        return val
+
     def setUp(self):
-        self.test_recipient = os.environ.get("XOXZO_API_TEST_RECIPIENT")
+        self.today = datetime.date.today()
+        self.test_recipient = self.getenv_with_none_check("XOXZO_API_TEST_RECIPIENT")
+        self.test_mp3_url = self.getenv_with_none_check("XOXZO_API_TEST_MP3")
+        sid = self.getenv_with_none_check("XOXZO_API_SID")
+        auth_token = self.getenv_with_none_check("XOXZO_API_AUTH_TOKEN")
         self.test_sender = "814512345678"
-        self.test_mp3_url = os.environ.get("XOXZO_API_TEST_MP3")
-        sid = os.environ.get("XOXZO_API_SID")
-        auth_token = os.environ.get("XOXZO_API_AUTH_TOKEN")
         self.xc = XoxzoClient(sid=sid, auth_token=auth_token)
 
         # print
@@ -123,7 +131,9 @@ class TestXoxzoClientTestCase(unittest.TestCase):
         self.assertEqual(type(xoxzo_res.messages), list)
 
     def test_get_sms_list_success02(self):
-        xoxzo_res = self.xc.get_sent_sms_list(sent_date=">=2016-04-01")
+        # sent date within 89 days should success
+        taeget_date = str(self.today - datetime.timedelta(days=89))
+        xoxzo_res = self.xc.get_sent_sms_list(sent_date=">=%s" % taeget_date)
         self.assertEqual(xoxzo_res.errors, None)
         self.assertEqual(xoxzo_res.message, {})
         self.assertEqual(type(xoxzo_res.messages), list)
@@ -131,6 +141,14 @@ class TestXoxzoClientTestCase(unittest.TestCase):
     def test_get_sms_list_fail01(self):
         # bad date string
         xoxzo_res = self.xc.get_sent_sms_list(sent_date=">=2016-13-01")
+        self.assertEqual(xoxzo_res.errors, 400)
+        self.assertTrue('sent_date' in xoxzo_res.message)
+        self.assertEqual(xoxzo_res.messages, [])
+
+    def test_get_sms_list_fail02(self):
+        # sent date within 91 days should fail
+        taeget_date = str(self.today - datetime.timedelta(days=91))
+        xoxzo_res = self.xc.get_sent_sms_list(sent_date=">=%s" % taeget_date)
         self.assertEqual(xoxzo_res.errors, 400)
         self.assertTrue('sent_date' in xoxzo_res.message)
         self.assertEqual(xoxzo_res.messages, [])
