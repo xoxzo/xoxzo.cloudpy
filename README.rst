@@ -93,7 +93,7 @@ You can send sms or make a phone call with just a few line of python code.
 
 **Sample Code 3**
 
-* Subscribe DIN::
+*Subscribe DIN*::
 
  xc = XoxzoClient(sid="<your xoxzo sid>", auth_token="<your xoxzo auth_token>")
  xoxzo_res = xc.get_din_list()
@@ -107,7 +107,7 @@ You can send sms or make a phone call with just a few line of python code.
 
 2. The you subscribe a DIN via subscribe_din() method specifying din uniq id.
 
-* Set action URL::
+*Set action URL*::
 
  an_action_url = 'http://example.com/dummy_action'
  xoxzo_res = xc.set_action_url(din_uid=din_uid, action_url=an_action_url)
