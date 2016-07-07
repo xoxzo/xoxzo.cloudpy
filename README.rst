@@ -111,7 +111,7 @@ You can check sent SMS status spcifying a certain date. You can use comparison o
 
 *Explanation*
 
-1. In order to subsucribe DIN, you must find available unsubscribed DINs using get_din_list() method.
+1. In order to subscribe DIN, you must find available unsubscribed DINs using get_din_list() method.
 
 2. The you subscribe a DIN via subscribe_din() method specifying din uniq id.
 
