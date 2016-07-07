@@ -123,5 +123,5 @@ You can check sent SMS status spcifying a certain date. You can use comparison o
 
 *Explanation*
 
-1. Once you suscribede the DIN, you can set action url to the DIN. This URL will be called in the event of the DIN gets called.
+1. Once you subscribed the DIN, you can set action url to the DIN. This URL will be called in the event of the DIN gets called.
 The URL will called by http GET method with the parameters, caller and recipient.
