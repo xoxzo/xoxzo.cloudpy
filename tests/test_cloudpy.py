@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import datetime
 import json
 import os
 import unittest
@@ -6,13 +7,20 @@ import unittest
 from xoxzo.cloudpy import XoxzoClient
 
 
-class TestXoxzoClient(unittest.TestCase):
+class TestXoxzoClientTestCase(unittest.TestCase):
+    def getenv_with_none_check(self, env):
+        val = os.environ.get(env)
+        if val == None:
+            raise Exception("Environment variable %s must be set" % env)
+        return val
+
     def setUp(self):
-        self.test_recipient = os.environ.get("XOXZO_API_TEST_RECIPIENT")
+        self.today = datetime.date.today()
+        self.test_recipient = self.getenv_with_none_check("XOXZO_API_TEST_RECIPIENT")
+        self.test_mp3_url = self.getenv_with_none_check("XOXZO_API_TEST_MP3")
+        sid = self.getenv_with_none_check("XOXZO_API_SID")
+        auth_token = self.getenv_with_none_check("XOXZO_API_AUTH_TOKEN")
         self.test_sender = "814512345678"
-        self.test_mp3_url = os.environ.get("XOXZO_API_TEST_MP3")
-        sid = os.environ.get("XOXZO_API_SID")
-        auth_token = os.environ.get("XOXZO_API_AUTH_TOKEN")
         self.xc = XoxzoClient(sid=sid, auth_token=auth_token)
 
         # print
@@ -115,9 +123,6 @@ class TestXoxzoClient(unittest.TestCase):
         xoxzo_res = self.xc.get_sms_delivery_status(
             msgid="dabd8e76-390f-421c-87b5-57f31339d0c5")
         self.assertEqual(xoxzo_res.errors, 404)
-        # todo: currentry this asssertion fails due to bug X4CTBE-112
-        self.assertEqual(xoxzo_res.message, None)
-        self.assertEqual(xoxzo_res.messages, [])
 
     def test_get_sms_list_success01(self):
         xoxzo_res = self.xc.get_sent_sms_list()
@@ -126,7 +131,9 @@ class TestXoxzoClient(unittest.TestCase):
         self.assertEqual(type(xoxzo_res.messages), list)
 
     def test_get_sms_list_success02(self):
-        xoxzo_res = self.xc.get_sent_sms_list(sent_date=">=2016-04-01")
+        # sent date within 89 days should success
+        taeget_date = str(self.today - datetime.timedelta(days=89))
+        xoxzo_res = self.xc.get_sent_sms_list(sent_date=">=%s" % taeget_date)
         self.assertEqual(xoxzo_res.errors, None)
         self.assertEqual(xoxzo_res.message, {})
         self.assertEqual(type(xoxzo_res.messages), list)
@@ -134,6 +141,14 @@ class TestXoxzoClient(unittest.TestCase):
     def test_get_sms_list_fail01(self):
         # bad date string
         xoxzo_res = self.xc.get_sent_sms_list(sent_date=">=2016-13-01")
+        self.assertEqual(xoxzo_res.errors, 400)
+        self.assertTrue('sent_date' in xoxzo_res.message)
+        self.assertEqual(xoxzo_res.messages, [])
+
+    def test_get_sms_list_fail02(self):
+        # sent date within 91 days should fail
+        taeget_date = str(self.today - datetime.timedelta(days=91))
+        xoxzo_res = self.xc.get_sent_sms_list(sent_date=">=%s" % taeget_date)
         self.assertEqual(xoxzo_res.errors, 400)
         self.assertTrue('sent_date' in xoxzo_res.message)
         self.assertEqual(xoxzo_res.messages, [])
@@ -170,16 +185,83 @@ class TestXoxzoClient(unittest.TestCase):
         xoxzo_res = self.xc.get_simple_playback_status(
             callid="dabd8e76-390f-421c-87b5-57f31339d0c5")
         self.assertEqual(xoxzo_res.errors, 404)
-        # todo: currentry this asssertion fails due to bug X4CTBE-113
-        self.assertEqual(xoxzo_res.message, None)
-        self.assertEqual(xoxzo_res.messages, [])
+
+
+    def test_get_din_list_success(self):
+        xoxzo_res = self.xc.get_din_list()
+        self.assertEqual(xoxzo_res.errors, None)
+
+    def test_get_din_list_prefix_success01(self):
+        xoxzo_res = self.xc.get_din_list(search_string='country=JP')
+        self.assertEqual(xoxzo_res.errors, None)
+
+    def test_get_din_list_prefix_success02(self):
+        xoxzo_res = self.xc.get_din_list(search_string='country=US')
+        self.assertEqual(xoxzo_res.errors, None)
+
+    def test_get_din_list_prefix_success03(self):
+        xoxzo_res = self.xc.get_din_list(search_string='prefix=813')
+        self.assertEqual(xoxzo_res.errors, None)
+
+    def test_get_din_list_fail01(self):
+        xoxzo_res = self.xc.get_din_list(search_string="foo=bar")
+        self.assertEqual(xoxzo_res.errors, 400)
+
+    def test_subscrige_and_unsubscribe(self):
+        # todo: make sure all subscrion made ducring test is unsubscribed
+        """
+        This test is a bit risky since it may leave a DIN beeing subscribed
+        when test fails during the execution.
+
+        :return:
+        """
+        xoxzo_res = self.xc.get_subscription_list()
+        self.assertEqual(xoxzo_res.errors, None)
+        # assume subscripti count 0
+        self.assertEqual(len(xoxzo_res.messages), 0)
+
+        xoxzo_res = self.xc.get_din_list()
+        self.assertEqual(xoxzo_res.errors, None)
+        din_uid = xoxzo_res.messages[0]['din_uid']
+
+        xoxzo_res = self.xc.subscribe_din(din_uid=din_uid)
+        self.assertEqual(xoxzo_res.errors, None)
+
+        xoxzo_res = self.xc.get_subscription_list()
+        self.assertEqual(xoxzo_res.errors, None)
+        # assume subscripti count 1
+        self.assertEqual(len(xoxzo_res.messages), 1)
+
+        dummy_action_url = 'http://example.com/dummy_action'
+        xoxzo_res = self.xc.set_action_url(din_uid=din_uid, action_url=dummy_action_url)
+        self.assertEqual(xoxzo_res.errors, None)
+
+        xoxzo_res = self.xc.unsubscribe_din(din_uid=din_uid)
+        self.assertEqual(xoxzo_res.errors, None)
+
+        xoxzo_res = self.xc.get_subscription_list()
+        self.assertEqual(xoxzo_res.errors, None)
+        # assume subscripti count 0
+        self.assertEqual(len(xoxzo_res.messages), 0)
+
+    def test_subscribe_din_fail01(self):
+        xoxzo_res = self.xc.subscribe_din(din_uid='0123456789')
+        self.assertEqual(xoxzo_res.errors, 400)
+
+    def test_unsubscribe_din_fail01(self):
+        xoxzo_res = self.xc.unsubscribe_din(din_uid='0123456789')
+        self.assertEqual(xoxzo_res.errors, 404)
 
     def dump_response(self, response):
-        print
-        print type(response)
-        print "errors:" + response.errors
-        print "message:\n" + json.dumps(response.message, indent=4)
-        print "messages:\n" + json.dumps(response.messages, indent=4)
+        print("\n===== DUMP RESPONSE =====")
+        if (response.errors != None):
+            print("errors:" + str(response.errors))
+        print("message:\n" + self.my_json_dumps(response.message))
+        print("messages:\n" + self.my_json_dumps(response.messages))
+
+    def my_json_dumps(self, data):
+        if (data != None):
+            return json.dumps(data, indent=4)
 
 if __name__ == "__main__":
     unittest.main()
