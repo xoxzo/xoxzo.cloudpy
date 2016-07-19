@@ -93,11 +93,11 @@ You can send sms or make a phone call with just a few line of python code.
 
 *Check SMS sent status*::
 
- xoxzo_res = self.xc.get_sent_sms_list(sent_date=">=2016-13-01")
+ xoxzo_res = xc.get_sent_sms_list(sent_date=">=2016-13-01")
 
 *Explanation*
 
-You can check sent SMS status spcifying a certain date. You can use comparison operators such as "<=,<,=,>,>="
+You can check sent SMS status specifying a certain date. You can use comparison operators such as "<=,<,=,>,>="
 
 **Sample Code 3**
 
