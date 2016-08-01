@@ -38,6 +38,26 @@ class XoxzoClient:
     # This value will be set in XoxzoClient.errors when Requests throw exception.
     REQUESTS_EXCEPITON = 499
 
+    def __parse(self, req_res):
+        '''
+        convert to requests lib response to Xoxzo response
+        :param req_res:
+        :return: XoxzoResponse
+        '''
+        if 200 <= req_res.status_code <= 201:
+            rj = req_res.json()
+            if type(rj) == list:
+                xr = XoxzoResponse(messages=req_res.json())
+            else:
+                xr = XoxzoResponse(message=req_res.json())
+        elif req_res.status_code == 404:
+            xr = XoxzoResponse(errors=req_res.status_code)
+        else:
+            xr = XoxzoResponse(
+                errors=req_res.status_code,
+                message=req_res.json())
+        return xr
+
     def __init__(self, sid, auth_token, api_host=None):
         '''
         Initialize and instanceate XoxzoClient object.
@@ -52,6 +72,7 @@ class XoxzoClient:
         self.xoxzo_api_voice_simple_url = (
             api_host + "/voice/simple/playback/")
         self.xoxzo_api_dins_url = api_host + "/voice/dins/"
+
 
     def send_sms(self, message, recipient, sender):
         '''
@@ -75,17 +96,9 @@ class XoxzoClient:
                 self.xoxzo_api_sms_url,
                 data=payload,
                 auth=(self.sid, self.auth_token))
+            return (self.__parse(req_res))
         except requests.exceptions.RequestException as e:
-            xr =  XoxzoResponse(errors=XoxzoClient.REQUESTS_EXCEPITON, message= {"http_error":e})
-            return xr
-        else:
-            if req_res.status_code == 201:
-                # when success, return list
-                xr = XoxzoResponse(messages=req_res.json())
-            else:
-                xr = XoxzoResponse(
-                    errors=req_res.status_code,
-                    message=req_res.json())
+            xr = XoxzoResponse(errors=XoxzoClient.REQUESTS_EXCEPITON, message={"http_error": e})
             return xr
 
     def get_sms_delivery_status(self, msgid):

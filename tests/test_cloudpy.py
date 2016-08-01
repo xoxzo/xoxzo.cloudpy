@@ -218,7 +218,7 @@ class TestXoxzoClientTestCase(unittest.TestCase):
         xoxzo_res = self.xc.get_subscription_list()
         self.assertEqual(xoxzo_res.errors, None)
         # assume subscripti count 0
-        self.assertEqual(len(xoxzo_res.messages), 0)
+        inisital_subscription_count = len(xoxzo_res.messages)
 
         xoxzo_res = self.xc.get_din_list()
         self.assertEqual(xoxzo_res.errors, None)
@@ -229,8 +229,8 @@ class TestXoxzoClientTestCase(unittest.TestCase):
 
         xoxzo_res = self.xc.get_subscription_list()
         self.assertEqual(xoxzo_res.errors, None)
-        # assume subscripti count 1
-        self.assertEqual(len(xoxzo_res.messages), 1)
+        # assume subscripti count +1
+        self.assertEqual(len(xoxzo_res.messages), inisital_subscription_count + 1)
 
         dummy_action_url = 'http://example.com/dummy_action'
         xoxzo_res = self.xc.set_action_url(din_uid=din_uid, action_url=dummy_action_url)
@@ -241,8 +241,8 @@ class TestXoxzoClientTestCase(unittest.TestCase):
 
         xoxzo_res = self.xc.get_subscription_list()
         self.assertEqual(xoxzo_res.errors, None)
-        # assume subscripti count 0
-        self.assertEqual(len(xoxzo_res.messages), 0)
+        # assume subscripti count = inisital_subscription_count
+        self.assertEqual(len(xoxzo_res.messages), inisital_subscription_count)
 
     def test_subscribe_din_fail01(self):
         xoxzo_res = self.xc.subscribe_din(din_uid='0123456789')
