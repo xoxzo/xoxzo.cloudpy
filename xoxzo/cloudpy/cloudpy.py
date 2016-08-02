@@ -44,18 +44,20 @@ class XoxzoClient:
         :param req_res:
         :return: XoxzoResponse
         '''
-        if 200 <= req_res.status_code <= 201:
+        try:
             rj = req_res.json()
+        except ValueError as e:
+            rj = None
+
+        if 200 <= req_res.status_code <= 201:
             if type(rj) == list:
-                xr = XoxzoResponse(messages=req_res.json())
+                xr = XoxzoResponse(messages=rj)
             else:
-                xr = XoxzoResponse(message=req_res.json())
-        elif req_res.status_code == 404:
-            xr = XoxzoResponse(errors=req_res.status_code)
+                xr = XoxzoResponse(message=rj)
         else:
             xr = XoxzoResponse(
                 errors=req_res.status_code,
-                message=req_res.json())
+                message=rj)
         return xr
 
     def __init__(self, sid, auth_token, api_host=None):
@@ -115,18 +117,9 @@ class XoxzoClient:
         url = self.xoxzo_api_sms_url + msgid
         try:
             req_res = requests.get(url, auth=(self.sid, self.auth_token))
+            return (self.__parse(req_res))
         except requests.exceptions.RequestException as e:
             xr = XoxzoResponse(errors=XoxzoClient.REQUESTS_EXCEPITON, message= {"http_error":e})
-            return xr
-        else:
-            if req_res.status_code == 200:
-                xr = XoxzoResponse(message=req_res.json())
-            elif req_res.status_code == 404:
-                xr = XoxzoResponse(errors=req_res.status_code)
-            else:
-                xr = XoxzoResponse(
-                    errors=req_res.status_code,
-                    message=req_res.json())
             return xr
 
     def get_sent_sms_list(self, sent_date=None):
@@ -147,16 +140,9 @@ class XoxzoClient:
             url = self.xoxzo_api_sms_url + '?sent_date' + sent_date
         try:
             req_res = requests.get(url, auth=(self.sid, self.auth_token))
+            return (self.__parse(req_res))
         except requests.exceptions.RequestException as e:
             xr = XoxzoResponse(errors=XoxzoClient.REQUESTS_EXCEPITON, message={"http_error": e})
-            return xr
-        else:
-            if req_res.status_code == 200:
-                xr = XoxzoResponse(messages=req_res.json())
-            else:
-                xr = XoxzoResponse(
-                    errors=req_res.status_code,
-                    message=req_res.json())
             return xr
 
     def call_simple_playback(self, caller, recipient, recording_url):
@@ -182,16 +168,9 @@ class XoxzoClient:
                 self.xoxzo_api_voice_simple_url,
                 data=payload,
                 auth=(self.sid, self.auth_token))
+            return (self.__parse(req_res))
         except requests.exceptions.RequestException as e:
             xr = XoxzoResponse(errors=XoxzoClient.REQUESTS_EXCEPITON, message= {"http_error":e})
-            return xr
-        else:
-            if req_res.status_code == 201:
-                xr = XoxzoResponse(messages=req_res.json())
-            else:
-                xr = XoxzoResponse(
-                    errors=req_res.status_code,
-                    message=req_res.json())
             return xr
 
     def get_simple_playback_status(self, callid):
@@ -209,18 +188,9 @@ class XoxzoClient:
         url = self.xoxzo_api_voice_simple_url + callid
         try:
             req_res = requests.get(url, auth=(self.sid, self.auth_token))
+            return (self.__parse(req_res))
         except requests.exceptions.RequestException as e:
             xr = XoxzoResponse(errors=XoxzoClient.REQUESTS_EXCEPITON, message= {"http_error":e})
-            return xr
-        else:
-            if req_res.status_code == 200:
-                xr = XoxzoResponse(message=req_res.json())
-            elif req_res.status_code == 404:
-                xr = XoxzoResponse(errors=req_res.status_code)
-            else:
-                xr = XoxzoResponse(
-                    errors=req_res.status_code,
-                    message=req_res.json())
             return xr
 
     def get_din_list(self, search_string=None):
@@ -235,18 +205,9 @@ class XoxzoClient:
             url = self.xoxzo_api_dins_url + '?' + search_string
         try:
             req_res = requests.get(url, auth=(self.sid, self.auth_token))
+            return (self.__parse(req_res))
         except requests.exceptions.RequestException as e:
             xr = XoxzoResponse(errors=XoxzoClient.REQUESTS_EXCEPITON, message={"http_error": e})
-            return xr
-        else:
-            if req_res.status_code == 200:
-                xr = XoxzoResponse(messages=req_res.json())
-            elif req_res.status_code == 404:
-                xr = XoxzoResponse(errors=req_res.status_code)
-            else:
-                xr = XoxzoResponse(
-                    errors=req_res.status_code,
-                    message=req_res.json())
             return xr
 
     def subscribe_din(self, din_uid=None):
@@ -265,18 +226,9 @@ class XoxzoClient:
             req_res = requests.post(url,
                                     data=payload,
                                     auth=(self.sid, self.auth_token))
+            return (self.__parse(req_res))
         except requests.exceptions.RequestException as e:
             xr = XoxzoResponse(errors=XoxzoClient.REQUESTS_EXCEPITON, message={"http_error": e})
-            return xr
-        else:
-            if req_res.status_code == 201:
-                xr = XoxzoResponse(messages=req_res.json())
-            elif req_res.status_code == 404:
-                xr = XoxzoResponse(errors=req_res.status_code)
-            else:
-                xr = XoxzoResponse(
-                    errors=req_res.status_code,
-                    message=req_res.json())
             return xr
 
     def unsubscribe_din(self, din_uid):
@@ -289,19 +241,11 @@ class XoxzoClient:
 
         try:
             req_res = requests.delete(url, auth=(self.sid, self.auth_token))
+            return (self.__parse(req_res))
         except requests.exceptions.RequestException as e:
             xr = XoxzoResponse(errors=XoxzoClient.REQUESTS_EXCEPITON, message={"http_error": e})
             return xr
-        else:
-            if req_res.status_code == 200:
-                xr = XoxzoResponse()
-            elif req_res.status_code == 404:
-                xr = XoxzoResponse(errors=req_res.status_code)
-            else:
-                xr = XoxzoResponse(
-                    errors=req_res.status_code,
-                    message=req_res.json())
-            return xr
+
 
     def get_subscription_list(self):
         """
@@ -312,18 +256,9 @@ class XoxzoClient:
 
         try:
             req_res = requests.get(url, auth=(self.sid, self.auth_token))
+            return (self.__parse(req_res))
         except requests.exceptions.RequestException as e:
             xr = XoxzoResponse(errors=XoxzoClient.REQUESTS_EXCEPITON, message={"http_error": e})
-            return xr
-        else:
-            if req_res.status_code == 200:
-                xr = XoxzoResponse(messages=req_res.json())
-            elif req_res.status_code == 404:
-                xr = XoxzoResponse(errors=req_res.status_code)
-            else:
-                xr = XoxzoResponse(
-                    errors=req_res.status_code,
-                    message=req_res.json())
             return xr
 
     def set_action_url(self, din_uid, action_url):
@@ -343,17 +278,7 @@ class XoxzoClient:
             req_res = requests.post(url,
                                     data=payload,
                                     auth=(self.sid, self.auth_token))
+            return (self.__parse(req_res))
         except requests.exceptions.RequestException as e:
             xr = XoxzoResponse(errors=XoxzoClient.REQUESTS_EXCEPITON, message={"http_error": e})
-            return xr
-        else:
-            if req_res.status_code == 200:
-                # set action url returns empty body when success
-                xr = XoxzoResponse()
-            elif req_res.status_code == 404:
-                xr = XoxzoResponse(errors=req_res.status_code)
-            else:
-                xr = XoxzoResponse(
-                    errors=req_res.status_code,
-                    message=req_res.json())
             return xr
