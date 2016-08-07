@@ -7,7 +7,7 @@ For detailed documentation on the API itself, you can refer to the `documentatio
 
 **Introduction**
 
-xoxzo.cloudpy is the paython package that you can send sms or make a phone call and playback a MP3 file
+xoxzo.cloudpy is the python package that you can send sms or make a phone call and playback a MP3 file
 via Xoxzo telephony API. This is the open source package with MIT LICENSE.
 
 **Sample Code 1**
