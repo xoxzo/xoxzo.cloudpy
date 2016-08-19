@@ -1,13 +1,13 @@
-=====================================
+=================================
 Xoxzo Cloud API Client for Python
-=====================================
+=================================
 
 This is the official client and implementation reference to talk to `Xoxzo's Cloud Communication API <https://www.xoxzo.com/en/>`_.
 For detailed documentation on the API itself, you can refer to the `documentation <http://docs.xoxzo.com/en/>`_
 
 **Introduction**
 
-xoxzo.cloudpy is the paython package that you can send sms or make a phone call and playback a MP3 file
+xoxzo.cloudpy is the python package that you can send sms or make a phone call and playback a MP3 file
 via Xoxzo telephony API. This is the open source package with MIT LICENSE.
 
 **Sample Code 1**
@@ -90,3 +90,38 @@ You can send sms or make a phone call with just a few line of python code.
 
 
 3. You can check the call status by get_simple_playback_status() method. You will provide call-id of the call you want to check.
+
+*Check SMS sent status*::
+
+ xoxzo_res = xc.get_sent_sms_list(sent_date=">=2016-13-01")
+
+*Explanation*
+
+You can check sent SMS status specifying a certain date. You can use comparison operators such as "<=,<,=,>,>="
+
+**Sample Code 3**
+
+*Subscribe DIN*::
+
+ xc = XoxzoClient(sid="<your xoxzo sid>", auth_token="<your xoxzo auth_token>")
+ xoxzo_res = xc.get_din_list()
+ din_uid = xoxzo_res.messages[0]['din_uid']
+ xoxzo_res = xc.subscribe_din(din_uid=din_uid)
+
+
+*Explanation*
+
+1. In order to subscribe DIN, you must find available unsubscribed DINs using get_din_list() method.
+
+2. Then you subscribe a DIN via subscribe_din() method specifying din unique id.
+
+*Set action URL*::
+
+ an_action_url = 'http://example.com/dummy_action'
+ xoxzo_res = xc.set_action_url(din_uid=din_uid, action_url=an_action_url)
+
+
+*Explanation*
+
+1. Once you subscribed the DIN, you can set action url to the DIN. This URL will be called in the event of the DIN gets called.
+The URL will called by http GET method with the parameters, caller and recipient.
