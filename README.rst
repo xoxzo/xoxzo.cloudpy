@@ -141,4 +141,4 @@ In order to get the list of current subscription, you can call the method above.
 
 *Explanation*
 
-1. When you no longer use DIN, you can unsubscribe the DIN by specifying the din unique din id.
+1. When you no longer use DIN, you can unsubscribe the DIN by specifying the din unique id.
