@@ -132,7 +132,7 @@ The URL will called by http GET method with the parameters, caller and recipient
 
 *Explanation*
 
-In order to get the list of current subscription, you can call the method above.
+In order to get the list of current subscriptions, you can call the method above.
 
 
 *Unsubscribe DIN*::
