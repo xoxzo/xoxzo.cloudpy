@@ -125,3 +125,20 @@ You can check sent SMS status specifying a certain date. You can use comparison 
 
 1. Once you subscribed the DIN, you can set action url to the DIN. This URL will be called in the event of the DIN gets called.
 The URL will called by http GET method with the parameters, caller and recipient.
+
+*Get the list of subscription*::
+
+ xoxzo_res = self.xc.get_subscription_list()
+
+*Explanation*
+
+In order to get the list of current subscriptions, you can call the method above.
+
+
+*Unsubscribe DIN*::
+
+   xoxzo_res = self.xc.unsubscribe_din(din_uid=din_uid)
+
+*Explanation*
+
+1. When you no longer use DIN, you can unsubscribe the DIN by specifying the din unique id.
