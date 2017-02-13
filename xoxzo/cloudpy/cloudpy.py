@@ -84,7 +84,7 @@ class XoxzoClient:
         :param string recipient: Message recipient.
         :param string sender: Sender ID.
         :return: if XoxzoResponse.errors == None, list of message ids are returned in XoxzoResponse.messages.
-            otherwise, error coed is retruned in XoxzoResponse.errors and detailed error message is set in
+            otherwise, error code is returned in XoxzoResponse.errors and detailed error message is set in
             XoxzoResponse.message.
         :rtype: XoxzoResponse
         '''
@@ -109,7 +109,7 @@ class XoxzoClient:
 
         :param string msgid: msgid of the return value of send_sms() method.
         :return: if XoxzoResponse.errors == None, list of message ids are returned in XoxzoResponse.messages.
-            otherwise, error coed is retruned in XoxzoResponse.errors and detailed error message is set in
+            otherwise, error code is returned in XoxzoResponse.errors and detailed error message is set in
             XoxzoResponse.message.
         :rtype: XoxzoResponse
         '''
@@ -129,7 +129,7 @@ class XoxzoClient:
         :param string sent_date: search condition date string.
             see http://docs.xoxzo.com/en/sms.html#sent-messages-list-api.
         :return: if XoxzoResponse.errors == None, list of message ids are returned in XoxzoResponse.messages.
-            otherwise, error coed is retruned in XoxzoResponse.errors and detailed error message is set in
+            otherwise, error code is returned in XoxzoResponse.errors and detailed error message is set in
             XoxzoResponse.message.
         :rtype: XoxzoResponse
         '''
@@ -153,7 +153,7 @@ class XoxzoClient:
         :param string recipient: Phone call recipient.
         :param string recording_url: MP3 file URL.
         :return: if XoxzoResponse.errors == None, list of message ids are returned in XoxzoResponse.messages.
-            otherwise, error coed is retruned in XoxzoResponse.errors and detailed error message is set in
+            otherwise, error code is returned in XoxzoResponse.errors and detailed error message is set in
             XoxzoResponse.message.
         :rtype: XoxzoResponse
         '''
@@ -180,7 +180,7 @@ class XoxzoClient:
         :param string callid: callid of the return value of
             call_simple_playback() method.
         :return: if XoxzoResponse.errors == None, list of message ids are returned in XoxzoResponse.messages.
-            otherwise, error coed is retruned in XoxzoResponse.errors and detailed error message is set in
+            otherwise, error code is returned in XoxzoResponse.errors and detailed error message is set in
             XoxzoResponse.message.
         :rtype: XoxzoResponse.
         '''
