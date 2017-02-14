@@ -243,18 +243,18 @@ class TestXoxzoClientTestCase(unittest.TestCase):
         xoxzo_res = self.xc.get_din_list(search_string="foo=bar")
         self.assertEqual(xoxzo_res.errors, 400)
 
-    def test_subscrige_and_unsubscribe(self):
-        # todo: make sure all subscrion made ducring test is unsubscribed
+    def test_subscribe_and_unsubscribe(self):
+        # todo: make sure all subscription made during test is unsubscribed
         """
-        This test is a bit risky since it may leave a DIN beeing subscribed
+        This test is a bit risky since it may leave a DIN being subscribed
         when test fails during the execution.
 
         :return:
         """
         xoxzo_res = self.xc.get_subscription_list()
         self.assertEqual(xoxzo_res.errors, None)
-        # assume subscripti count 0
-        inisital_subscription_count = len(xoxzo_res.messages)
+        # assume subscription count 0
+        initial_subscription_count = len(xoxzo_res.messages)
 
         xoxzo_res = self.xc.get_din_list()
         self.assertEqual(xoxzo_res.errors, None)
@@ -265,8 +265,8 @@ class TestXoxzoClientTestCase(unittest.TestCase):
 
         xoxzo_res = self.xc.get_subscription_list()
         self.assertEqual(xoxzo_res.errors, None)
-        # assume subscripti count +1
-        self.assertEqual(len(xoxzo_res.messages), inisital_subscription_count + 1)
+        # assume subscription count +1
+        self.assertEqual(len(xoxzo_res.messages), initial_subscription_count + 1)
 
         dummy_action_url = 'http://example.com/dummy_action'
         xoxzo_res = self.xc.set_action_url(din_uid=din_uid, action_url=dummy_action_url)
@@ -277,8 +277,8 @@ class TestXoxzoClientTestCase(unittest.TestCase):
 
         xoxzo_res = self.xc.get_subscription_list()
         self.assertEqual(xoxzo_res.errors, None)
-        # assume subscripti count = inisital_subscription_count
-        self.assertEqual(len(xoxzo_res.messages), inisital_subscription_count)
+        # assume subscription count = initial_subscription_count
+        self.assertEqual(len(xoxzo_res.messages), initial_subscription_count)
 
     def test_subscribe_din_fail01(self):
         xoxzo_res = self.xc.subscribe_din(din_uid='0123456789')
