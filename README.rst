@@ -47,7 +47,7 @@ You can send sms or make a phone call with just a few line of python code.
   * sender: this number will be displayed on the recipient device.
 
   This method will return XoxzoResponse object. If XoxzoResponse.errors == None, XoxzoResponse.messages[0]['msgid']
-  is the meesage id that you can pass to the  get_sms_delivery_status() call.
+  is the meesage id that you can pass to the get_sms_delivery_status() call.
 
 3. You can check the sms delivery status by get_sms_delivery_status() method. You will provide message-id of the sms you want to check.
 
@@ -78,7 +78,7 @@ You can send sms or make a phone call with just a few line of python code.
 
 2. Then you can call call_simple_playback() method. You need to provide three parameters.
 
-  * recording_url: URL of the MP3 file you want to palyback.
+  * recording_url: URL of the MP3 file you want to playback.
 
   * recipient: phone number of the call recipient. This must start with Japanese country code "+81" and follow the
     `E.164 <https://en.wikipedia.org/wiki/E.164>`_ format.

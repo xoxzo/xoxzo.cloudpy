@@ -18,6 +18,8 @@ class TestXoxzoClientTestCase(unittest.TestCase):
         self.today = datetime.date.today()
         self.test_recipient = self.getenv_with_none_check("XOXZO_API_TEST_RECIPIENT")
         self.test_mp3_url = self.getenv_with_none_check("XOXZO_API_TEST_MP3")
+        self.test_tts_message = self.getenv_with_none_check("XOXZO_API_TEST_TTS_MESSAGE")
+        self.test_tts_lang = self.getenv_with_none_check("XOXZO_API_TEST_TTS_LANG")
         sid = self.getenv_with_none_check("XOXZO_API_SID")
         auth_token = self.getenv_with_none_check("XOXZO_API_AUTH_TOKEN")
         self.test_sender = "814512345678"
@@ -186,6 +188,40 @@ class TestXoxzoClientTestCase(unittest.TestCase):
             callid="dabd8e76-390f-421c-87b5-57f31339d0c5")
         self.assertEqual(xoxzo_res.errors, 404)
 
+    # TTS Tests
+    @unittest.skip("skip this for now")
+    def test_call_tts_playback_success01(self):
+        xoxzo_res = self.xc.call_tts_playback(
+            self.test_sender,
+            self.test_recipient,
+            self.test_tts_message,
+            self.test_tts_lang)
+        self.assertEqual(xoxzo_res.errors, None)
+        self.assertEqual(xoxzo_res.message, {})
+        self.assertTrue('callid' in xoxzo_res.message[0])
+
+        callid = xoxzo_res.messages[0]['callid']
+        xoxzo_res = self.xc.get_simple_playback_status(callid)
+        self.assertEqual(xoxzo_res.errors, None)
+        self.assertTrue('callid' in xoxzo_res.message)
+        self.assertEqual(xoxzo_res.messages, [])
+
+    def test_call_tts_plaback_fail01(self):
+        # bad recipient
+        xoxzo_res = self.xc.call_tts_playback(
+            self.test_sender,
+            "+8108012345678",
+            self.test_tts_message,
+            self.test_tts_lang)
+        self.assertEqual(xoxzo_res.errors, 400)
+        self.assertTrue('recipient' in xoxzo_res.message)
+        self.assertEqual(xoxzo_res.messages, [])
+
+    def test_get_simple_playback_status_fail02(self):
+        # bad callid
+        xoxzo_res = self.xc.get_simple_playback_status(
+            callid="dabd8e76-390f-421c-87b5-57f31339d0c5")
+        self.assertEqual(xoxzo_res.errors, 404)
 
     def test_get_din_list_success(self):
         xoxzo_res = self.xc.get_din_list()
@@ -207,18 +243,18 @@ class TestXoxzoClientTestCase(unittest.TestCase):
         xoxzo_res = self.xc.get_din_list(search_string="foo=bar")
         self.assertEqual(xoxzo_res.errors, 400)
 
-    def test_subscrige_and_unsubscribe(self):
-        # todo: make sure all subscrion made ducring test is unsubscribed
+    def test_subscribe_and_unsubscribe(self):
+        # todo: make sure all subscription made during test is unsubscribed
         """
-        This test is a bit risky since it may leave a DIN beeing subscribed
+        This test is a bit risky since it may leave a DIN being subscribed
         when test fails during the execution.
 
         :return:
         """
         xoxzo_res = self.xc.get_subscription_list()
         self.assertEqual(xoxzo_res.errors, None)
-        # assume subscripti count 0
-        inisital_subscription_count = len(xoxzo_res.messages)
+        # assume subscription count 0
+        initial_subscription_count = len(xoxzo_res.messages)
 
         xoxzo_res = self.xc.get_din_list()
         self.assertEqual(xoxzo_res.errors, None)
@@ -229,8 +265,8 @@ class TestXoxzoClientTestCase(unittest.TestCase):
 
         xoxzo_res = self.xc.get_subscription_list()
         self.assertEqual(xoxzo_res.errors, None)
-        # assume subscripti count +1
-        self.assertEqual(len(xoxzo_res.messages), inisital_subscription_count + 1)
+        # assume subscription count +1
+        self.assertEqual(len(xoxzo_res.messages), initial_subscription_count + 1)
 
         dummy_action_url = 'http://example.com/dummy_action'
         xoxzo_res = self.xc.set_action_url(din_uid=din_uid, action_url=dummy_action_url)
@@ -241,8 +277,8 @@ class TestXoxzoClientTestCase(unittest.TestCase):
 
         xoxzo_res = self.xc.get_subscription_list()
         self.assertEqual(xoxzo_res.errors, None)
-        # assume subscripti count = inisital_subscription_count
-        self.assertEqual(len(xoxzo_res.messages), inisital_subscription_count)
+        # assume subscription count = initial_subscription_count
+        self.assertEqual(len(xoxzo_res.messages), initial_subscription_count)
 
     def test_subscribe_din_fail01(self):
         xoxzo_res = self.xc.subscribe_din(din_uid='0123456789')
