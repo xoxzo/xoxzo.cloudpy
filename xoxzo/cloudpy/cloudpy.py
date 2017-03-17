@@ -84,7 +84,7 @@ class XoxzoClient:
         :param string recipient: Message recipient.
         :param string sender: Sender ID.
         :return: if XoxzoResponse.errors == None, list of message ids are returned in XoxzoResponse.messages.
-            otherwise, error coed is retruned in XoxzoResponse.errors and detailed error message is set in
+            otherwise, error code is returned in XoxzoResponse.errors and detailed error message is set in
             XoxzoResponse.message.
         :rtype: XoxzoResponse
         '''
@@ -109,7 +109,7 @@ class XoxzoClient:
 
         :param string msgid: msgid of the return value of send_sms() method.
         :return: if XoxzoResponse.errors == None, list of message ids are returned in XoxzoResponse.messages.
-            otherwise, error coed is retruned in XoxzoResponse.errors and detailed error message is set in
+            otherwise, error code is returned in XoxzoResponse.errors and detailed error message is set in
             XoxzoResponse.message.
         :rtype: XoxzoResponse
         '''
@@ -129,7 +129,7 @@ class XoxzoClient:
         :param string sent_date: search condition date string.
             see http://docs.xoxzo.com/en/sms.html#sent-messages-list-api.
         :return: if XoxzoResponse.errors == None, list of message ids are returned in XoxzoResponse.messages.
-            otherwise, error coed is retruned in XoxzoResponse.errors and detailed error message is set in
+            otherwise, error code is returned in XoxzoResponse.errors and detailed error message is set in
             XoxzoResponse.message.
         :rtype: XoxzoResponse
         '''
@@ -153,7 +153,7 @@ class XoxzoClient:
         :param string recipient: Phone call recipient.
         :param string recording_url: MP3 file URL.
         :return: if XoxzoResponse.errors == None, list of message ids are returned in XoxzoResponse.messages.
-            otherwise, error coed is retruned in XoxzoResponse.errors and detailed error message is set in
+            otherwise, error code is returned in XoxzoResponse.errors and detailed error message is set in
             XoxzoResponse.message.
         :rtype: XoxzoResponse
         '''
@@ -173,6 +173,36 @@ class XoxzoClient:
             xr = XoxzoResponse(errors=XoxzoClient.REQUESTS_EXCEPITON, message= {"http_error":e})
             return xr
 
+    def call_tts_playback(self, caller, recipient, tts_message, tts_lang):
+        '''
+        Make a phone call and playback TTS message.
+
+        :param string caller: caller phone number.
+        :param string recipient: Phone call recipient.
+        :param string tts_message: Text message for TTS call.
+        :param string tts_lang: Language of TTS message.
+        :return: if XoxzoResponse.errors == None, list of message ids are returned in XoxzoResponse.messages.
+            otherwise, error code is returned in XoxzoResponse.errors and detailed error message is set in
+            XoxzoResponse.message.
+        :rtype: XoxzoResponse
+        '''
+
+        payload = {
+            'caller': caller,
+            'recipient': recipient,
+            'tts_message': tts_message,
+            'tts_lang': tts_lang}
+
+        try:
+            req_res = requests.post(
+                self.xoxzo_api_voice_simple_url,
+                data=payload,
+                auth=(self.sid, self.auth_token))
+            return (self.__parse(req_res))
+        except requests.exceptions.RequestException as e:
+            xr = XoxzoResponse(errors=XoxzoClient.REQUESTS_EXCEPITON, message= {"http_error":e})
+            return xr
+
     def get_simple_playback_status(self, callid):
         '''
         Get simple palyback status.
@@ -180,7 +210,7 @@ class XoxzoClient:
         :param string callid: callid of the return value of
             call_simple_playback() method.
         :return: if XoxzoResponse.errors == None, list of message ids are returned in XoxzoResponse.messages.
-            otherwise, error coed is retruned in XoxzoResponse.errors and detailed error message is set in
+            otherwise, error code is returned in XoxzoResponse.errors and detailed error message is set in
             XoxzoResponse.message.
         :rtype: XoxzoResponse.
         '''
