@@ -182,12 +182,6 @@ class TestXoxzoClientTestCase(unittest.TestCase):
         self.assertTrue('recipient' in xoxzo_res.message)
         self.assertEqual(xoxzo_res.messages, [])
 
-    def test_get_simple_playback_status_fail01(self):
-        # bad callid
-        xoxzo_res = self.xc.get_simple_playback_status(
-            callid="dabd8e76-390f-421c-87b5-57f31339d0c5")
-        self.assertEqual(xoxzo_res.errors, 404)
-
     # TTS Tests
     @unittest.skip("skip this for now")
     def test_call_tts_playback_success01(self):
@@ -206,7 +200,7 @@ class TestXoxzoClientTestCase(unittest.TestCase):
         self.assertTrue('callid' in xoxzo_res.message)
         self.assertEqual(xoxzo_res.messages, [])
 
-    def test_call_tts_plaback_fail01(self):
+    def test_call_tts_playback_fail01(self):
         # bad recipient
         xoxzo_res = self.xc.call_tts_playback(
             self.test_sender,
@@ -217,7 +211,7 @@ class TestXoxzoClientTestCase(unittest.TestCase):
         self.assertTrue('recipient' in xoxzo_res.message)
         self.assertEqual(xoxzo_res.messages, [])
 
-    def test_get_simple_playback_status_fail02(self):
+    def test_get_simple_playback_status_fail01(self):
         # bad callid
         xoxzo_res = self.xc.get_simple_playback_status(
             callid="dabd8e76-390f-421c-87b5-57f31339d0c5")
