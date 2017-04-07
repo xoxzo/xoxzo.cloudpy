@@ -18,8 +18,6 @@ class TestXoxzoClientTestCase(unittest.TestCase):
         self.today = datetime.date.today()
         self.test_recipient = self.getenv_with_none_check("XOXZO_API_TEST_RECIPIENT")
         self.test_mp3_url = self.getenv_with_none_check("XOXZO_API_TEST_MP3")
-        self.test_tts_message = self.getenv_with_none_check("XOXZO_API_TEST_TTS_MESSAGE")
-        self.test_tts_lang = self.getenv_with_none_check("XOXZO_API_TEST_TTS_LANG")
         sid = self.getenv_with_none_check("XOXZO_API_SID")
         auth_token = self.getenv_with_none_check("XOXZO_API_AUTH_TOKEN")
         self.test_sender = "814512345678"
@@ -188,8 +186,8 @@ class TestXoxzoClientTestCase(unittest.TestCase):
         xoxzo_res = self.xc.call_tts_playback(
             self.test_sender,
             self.test_recipient,
-            self.test_tts_message,
-            self.test_tts_lang)
+            "Hello",
+            "en")
         self.assertEqual(xoxzo_res.errors, None)
         self.assertEqual(xoxzo_res.message, {})
         self.assertTrue('callid' in xoxzo_res.message[0])
@@ -205,8 +203,8 @@ class TestXoxzoClientTestCase(unittest.TestCase):
         xoxzo_res = self.xc.call_tts_playback(
             self.test_sender,
             "+8108012345678",
-            self.test_tts_message,
-            self.test_tts_lang)
+            "Hello",
+            "en")
         self.assertEqual(xoxzo_res.errors, 400)
         self.assertTrue('recipient' in xoxzo_res.message)
         self.assertEqual(xoxzo_res.messages, [])
