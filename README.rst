@@ -114,7 +114,7 @@ You can check sent SMS status specifying a certain date. You can use comparison 
         caller="818011112222",
         recipient="+818012345678",
         tts_message="Hello",
-        tts_lang="ja")
+        tts_lang="en")
 
     if result.errors != None:
         # some error happed
