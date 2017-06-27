@@ -25,7 +25,7 @@ via Xoxzo telephony API. This is the open source package with MIT LICENSE.
         recipient = "+818012345678",
         sender = "818011112222")
     if result.errors != None:
-        # some error happed
+        # some error happened
         print json.dumps(result.message, indent=4)
     else:
         # check messge delivery status
@@ -76,7 +76,7 @@ You can check sent SMS status specifying a certain date. You can use comparison 
         caller="818011112222")
 
     if result.errors != None:
-        # some error happed
+        # some error happened
         print json.dumps(result.message, indent=4)
     else:
         callid = result.messages[0]['callid']
@@ -117,7 +117,7 @@ You can check sent SMS status specifying a certain date. You can use comparison 
         tts_lang="en")
 
     if result.errors != None:
-        # some error happed
+        # some error happened
         print json.dumps(result.message, indent=4)
     else:
         callid = result.messages[0]['callid']
