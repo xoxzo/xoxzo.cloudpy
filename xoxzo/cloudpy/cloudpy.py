@@ -76,13 +76,14 @@ class XoxzoClient:
         self.xoxzo_api_dins_url = api_host + "/voice/dins/"
 
 
-    def send_sms(self, message, recipient, sender):
+    def send_sms(self, message, recipient, sender, callbackurl=None):
         '''
         Send sms to the recipient.
 
         :param string message: Message body.
         :param string recipient: Message recipient.
         :param string sender: Sender ID.
+        :param string callbackurl: Callback URL.
         :return: if XoxzoResponse.errors == None, list of message ids are returned in XoxzoResponse.messages.
             otherwise, error code is returned in XoxzoResponse.errors and detailed error message is set in
             XoxzoResponse.message.
@@ -92,7 +93,8 @@ class XoxzoClient:
         payload = {
             'message': message,
             'recipient': recipient,
-            'sender': sender}
+            'sender': sender,
+            'callbackurl': callbackurl}
         try:
             req_res = requests.post(
                 self.xoxzo_api_sms_url,
@@ -145,13 +147,14 @@ class XoxzoClient:
             xr = XoxzoResponse(errors=XoxzoClient.REQUESTS_EXCEPITON, message={"http_error": e})
             return xr
 
-    def call_simple_playback(self, caller, recipient, recording_url):
+    def call_simple_playback(self, caller, recipient, recording_url, callbackurl=None):
         '''
         Make a phone call and playback MP3 sound file.
 
         :param string caller: caller phone number.
         :param string recipient: Phone call recipient.
         :param string recording_url: MP3 file URL.
+        :param string callbackurl: Callback URL.
         :return: if XoxzoResponse.errors == None, list of message ids are returned in XoxzoResponse.messages.
             otherwise, error code is returned in XoxzoResponse.errors and detailed error message is set in
             XoxzoResponse.message.
@@ -161,7 +164,8 @@ class XoxzoClient:
         payload = {
             'caller': caller,
             'recipient': recipient,
-            'recording_url': recording_url}
+            'recording_url': recording_url,
+            'callbackurl': callbackurl}
 
         try:
             req_res = requests.post(
