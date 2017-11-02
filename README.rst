@@ -23,7 +23,8 @@ via Xoxzo telephony API. This is the open source package with MIT LICENSE.
     result = xc.send_sms(
         message = "Hello from Xoxzo",
         recipient = "+818012345678",
-        sender = "818011112222")
+        sender = "818011112222",
+        callbackurl = "http://example.com")
     if result.errors != None:
         # some error happened
         print json.dumps(result.message, indent=4)
@@ -39,7 +40,7 @@ You can send sms or make a phone call with just a few line of python code.
 
 1. First, you need to create XoxzoClient() object. You must provide xoxzo sid and auth_token when initializing this object. You can get sid and auth_token after you sign up the xoxzo account and access the xoxzo dashboard.
 
-2. Then you can call send_sms() method. You need to provide three parameters.
+2. Then you can call send_sms() method. You need to provide three required parameters and one optional parameter.
 
   * message: sms text you want to send.
 
@@ -47,6 +48,8 @@ You can send sms or make a phone call with just a few line of python code.
     `E.164 <https://en.wikipedia.org/wiki/E.164>`_ format.
 
   * sender: this number will be displayed on the recipient device.
+
+  * callbackurl(optional): callback URL will be called when the call ended.
 
   This method will return XoxzoResponse object. If XoxzoResponse.errors == None, XoxzoResponse.messages[0]['msgid']
   is the meesage id that you can pass to the get_sms_delivery_status() call.
@@ -73,7 +76,8 @@ You can check sent SMS status specifying a certain date. You can use comparison 
     result = xc.call_simple_playback(
         recipient="+818012345678",
         recording_url="http://example.com/sample.mp3",
-        caller="818011112222")
+        caller="818011112222",
+        callbackurl = "http://example.com")
 
     if result.errors != None:
         # some error happened
@@ -87,7 +91,7 @@ You can check sent SMS status specifying a certain date. You can use comparison 
 
 1. First, you need to create XoxzoClient() object. You must provide xoxzo sid and auth_token when initializing this object. You can get sid and auth_token after you sign up the xoxzo account and access the xoxzo dashboard.
 
-2. Then you can call call_simple_playback() method. You need to provide three parameters.
+2. Then you can call call_simple_playback() method. You need to provide three required parameters and one optional parameter.
 
   * recording_url: URL of the MP3 file you want to playback.
 
@@ -95,6 +99,8 @@ You can check sent SMS status specifying a certain date. You can use comparison 
     `E.164 <https://en.wikipedia.org/wiki/E.164>`_ format.
 
   * caller: this number will be displayed on the recipient device.
+
+  * callbackurl(optional): callback URL will be called when the call ended.
 
   This method will return XoxzoResponse object. If XoxzoResponse.errors == None, XoxzoResponse.messages[0]['callid']
   is the meesage id that you can pass to the get_sms_delivery_status() call.
