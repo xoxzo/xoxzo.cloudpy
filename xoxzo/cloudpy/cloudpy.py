@@ -177,7 +177,7 @@ class XoxzoClient:
             xr = XoxzoResponse(errors=XoxzoClient.REQUESTS_EXCEPITON, message= {"http_error":e})
             return xr
 
-    def call_tts_playback(self, caller, recipient, tts_message, tts_lang):
+    def call_tts_playback(self, caller, recipient, tts_message, tts_lang, callbackurl=None):
         '''
         Make a phone call and playback TTS message.
 
@@ -185,6 +185,7 @@ class XoxzoClient:
         :param string recipient: Phone call recipient.
         :param string tts_message: Text message for TTS call.
         :param string tts_lang: Language of TTS message.
+        :param string callbackurl: Callback URL.
         :return: if XoxzoResponse.errors == None, list of message ids are returned in XoxzoResponse.messages.
             otherwise, error code is returned in XoxzoResponse.errors and detailed error message is set in
             XoxzoResponse.message.
@@ -195,7 +196,8 @@ class XoxzoClient:
             'caller': caller,
             'recipient': recipient,
             'tts_message': tts_message,
-            'tts_lang': tts_lang}
+            'tts_lang': tts_lang,
+            'callbackurl': callbackurl}
 
         try:
             req_res = requests.post(

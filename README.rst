@@ -120,7 +120,8 @@ You can check sent SMS status specifying a certain date. You can use comparison 
         caller="818011112222",
         recipient="+818012345678",
         tts_message="Hello",
-        tts_lang="en")
+        tts_lang="en",
+        callbackurl = "http://example.com")
 
     if result.errors != None:
         # some error happened
@@ -134,7 +135,7 @@ You can check sent SMS status specifying a certain date. You can use comparison 
 
 1. First, you need to create XoxzoClient() object. You must provide xoxzo sid and auth_token when initializing this object. You can get sid and auth_token after you sign up the xoxzo account and access the xoxzo dashboard.
 
-2. Then you can call call_tts_playback() method. You need to provide four parameters.
+2. Then you can call call_tts_playback() method. You need to provide four required parameters and one optional parameter.
 
   * caller: this number will be displayed on the recipient device.
 
@@ -144,6 +145,8 @@ You can check sent SMS status specifying a certain date. You can use comparison 
   * tts_message: TTS text message you want to playback.
 
   * tts_lang: language code of TTS call.
+
+  * callbackurl(optional): callback URL will be called when the call ended.
 
   This method will return XoxzoResponse object. If XoxzoResponse.errors == None, XoxzoResponse.messages[0]['callid']
   is the meesage id that you can pass to the get_sms_delivery_status() call.
