@@ -71,8 +71,9 @@ class XoxzoClient:
             api_host = "https://api.xoxzo.com"
 
         self.xoxzo_api_sms_url = api_host + "/sms/messages/"
+        self.xoxzo_api_call_url = api_host + "/calls/"
         self.xoxzo_api_voice_simple_url = (
-            api_host + "/voice/simple/playback/")
+            api_host + "/voice/simple/playbacks/")
         self.xoxzo_api_dins_url = api_host + "/voice/dins/"
 
 
@@ -221,7 +222,7 @@ class XoxzoClient:
         :rtype: XoxzoResponse.
         '''
 
-        url = self.xoxzo_api_voice_simple_url + callid
+        url = self.xoxzo_api_call_url + callid
         try:
             req_res = requests.get(url, auth=(self.sid, self.auth_token))
             return (self.__parse(req_res))
