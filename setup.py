@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="xoxzo_cloudpy",
+    name="xoxzo.cloudpy",
     version="0.4.0",
     author="Xoxzo Inc.",
     author_email="help@xoxzo.com",
