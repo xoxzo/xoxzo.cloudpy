@@ -48,3 +48,5 @@ you can refer to the documentation at <http://docs.xoxzo.com>.
 """
 
 from .cloudpy import XoxzoClient
+
+name = 'cloudpy'

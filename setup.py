@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="xoxzo.cloudpy",
-    version="0.3.2",
+    version="0.4.0",
     author="Xoxzo Inc.",
     author_email="help@xoxzo.com",
     description=("Xoxzo Public API library"),
@@ -13,6 +13,7 @@ setup(
     install_requires=[
         'requests >=2.9.1',
     ],
-    test_suite='tests'
+    test_suite='tests',
+    zip_safe=False,
 )
 
