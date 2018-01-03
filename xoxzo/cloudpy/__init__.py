@@ -47,6 +47,6 @@ you can refer to the documentation at <http://docs.xoxzo.com>.
 :license: The MIT License (MIT), see LICENSE for details.
 """
 
-__import__('pkg_resources').declare_namespace(__name__)
-
 from .cloudpy import XoxzoClient
+
+name = 'cloudpy'
