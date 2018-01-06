@@ -71,7 +71,7 @@ class XoxzoClient:
             api_host = "https://api.xoxzo.com"
 
         self.xoxzo_api_sms_url = api_host + "/sms/messages/"
-        self.xoxzo_api_call_url = api_host + "/api/calls/"
+        self.xoxzo_api_call_url = api_host + "/voice/calls/"
         self.xoxzo_api_voice_simple_url = (
             api_host + "/voice/simple/playbacks/")
         self.xoxzo_api_dins_url = api_host + "/voice/dins/"
