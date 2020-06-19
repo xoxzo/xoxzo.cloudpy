@@ -117,7 +117,7 @@ class XoxzoClient:
         :rtype: XoxzoResponse
         '''
 
-        url = self.xoxzo_api_sms_url + msgid
+        url = self.xoxzo_api_sms_url + msgid + '/'
         try:
             req_res = requests.get(url, auth=(self.sid, self.auth_token))
             return (self.__parse(req_res))
@@ -222,7 +222,7 @@ class XoxzoClient:
         :rtype: XoxzoResponse.
         '''
 
-        url = self.xoxzo_api_call_url + callid
+        url = self.xoxzo_api_call_url + callid + '/'
         try:
             req_res = requests.get(url, auth=(self.sid, self.auth_token))
             return (self.__parse(req_res))
