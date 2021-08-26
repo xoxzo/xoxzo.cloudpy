@@ -114,7 +114,7 @@ class TestXoxzoClientTestCase(unittest.TestCase):
             "Hello from Xoxzo",
             self.test_recipient,
             self.test_sender,
-            foo="bar")
+            tags="foo,bar")
         self.assertEqual(xoxzo_res.errors, None)
         self.assertEqual(xoxzo_res.message,{})
         self.assertTrue('msgid' in xoxzo_res.messages[0])
@@ -123,6 +123,8 @@ class TestXoxzoClientTestCase(unittest.TestCase):
         xoxzo_res = self.xc.get_sms_delivery_status(msgid)
         self.assertEqual(xoxzo_res.errors, None)
         self.assertTrue('msgid' in xoxzo_res.message)
+        self.assertTrue('foo' in xoxzo_res.message['tags'])
+        self.assertTrue('bar' in xoxzo_res.message['tags'])
         self.assertEqual(xoxzo_res.messages,[])
 
     def test_send_sms_fail01(self):
