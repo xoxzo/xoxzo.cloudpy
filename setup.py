@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="xoxzo.cloudpy",
-    version="0.4.1",
+    version="0.5.0",
     author="Xoxzo Inc.",
     author_email="help@xoxzo.com",
     description=("Xoxzo Public API library"),

@@ -76,8 +76,7 @@ class XoxzoClient:
             api_host + "/voice/simple/playbacks/")
         self.xoxzo_api_dins_url = api_host + "/voice/dins/"
 
-
-    def send_sms(self, message, recipient, sender, callbackurl=None):
+    def send_sms(self, message, recipient, sender, callbackurl=None, **kwargs):
         '''
         Send sms to the recipient.
 
@@ -96,6 +95,10 @@ class XoxzoClient:
             'recipient': recipient,
             'sender': sender,
             'callbackurl': callbackurl}
+
+        if kwargs:
+            payload.update(kwargs)
+
         try:
             req_res = requests.post(
                 self.xoxzo_api_sms_url,
