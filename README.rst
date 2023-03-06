@@ -17,6 +17,7 @@ via Xoxzo telephony API. This is the open source package with MIT LICENSE.
 -------------------
 
 *Send sms*::
+ from xoxzo.cloudpy import XoxzoClient
 
  def sample_send_sms():
     xc = XoxzoClient(sid="<your xoxzo sid>", auth_token="<your xoxzo auth_token>")
@@ -69,6 +70,7 @@ You can check sent SMS status specifying a certain date. You can use comparison 
 -------------------
 
 *Make a phone call and playback MP3 file*::
+ from xoxzo.cloudpy import XoxzoClient
 
  def sample_call_simple_playback():
 
@@ -81,11 +83,11 @@ You can check sent SMS status specifying a certain date. You can use comparison 
 
     if result.errors != None:
         # some error happened
-        print json.dumps(result.message, indent=4)
+        print(json.dumps(result.message, indent=4))
     else:
         callid = result.messages[0]['callid']
         result = xc.get_simple_playback_status(callid)
-        print json.dumps(result.message, indent=4)
+        print(json.dumps(result.message, indent=4))
 
 *Explanation*
 
@@ -112,6 +114,7 @@ You can check sent SMS status specifying a certain date. You can use comparison 
 -------------------
 
 *Make a phone call and playback TTS message*::
+ from xoxzo.cloudpy import XoxzoClient
 
  def sample_call_tts_playback():
 
@@ -129,7 +132,7 @@ You can check sent SMS status specifying a certain date. You can use comparison 
     else:
         callid = result.messages[0]['callid']
         result = xc.get_simple_playback_status(callid)
-        print json.dumps(result.message, indent=4)
+        print(json.dumps(result.message, indent=4))
 
 *Explanation*
 
