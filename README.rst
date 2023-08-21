@@ -17,6 +17,7 @@ via Xoxzo telephony API. This is the open source package with MIT LICENSE.
 -------------------
 
 *Send sms*::
+
  from xoxzo.cloudpy import XoxzoClient
 
  def sample_send_sms():
@@ -39,9 +40,11 @@ via Xoxzo telephony API. This is the open source package with MIT LICENSE.
 
 You can send sms or make a phone call with just a few line of python code.
 
-1. First, you need to create XoxzoClient() object. You must provide xoxzo sid and auth_token when initializing this object. You can get sid and auth_token after you sign up the xoxzo account and access the xoxzo dashboard.
+1. 
+  First, you need to create XoxzoClient() object. You must provide xoxzo sid and auth_token when initializing this object. You can get sid and auth_token after you sign up the xoxzo account and access the xoxzo dashboard.
 
-2. Then you can call send_sms() method. You need to provide three required parameters and one optional parameter.
+2. 
+  Then you can call send_sms() method. You need to provide three required parameters and one optional parameter.
 
   * message: sms text you want to send.
 
@@ -55,7 +58,8 @@ You can send sms or make a phone call with just a few line of python code.
   This method will return XoxzoResponse object. If XoxzoResponse.errors == None, XoxzoResponse.messages[0]['msgid']
   is the meesage id that you can pass to the get_sms_delivery_status() call.
 
-3. You can check the sms delivery status by get_sms_delivery_status() method. You will provide message-id of the sms you want to check.
+3.
+  You can check the sms delivery status by get_sms_delivery_status() method. You will provide message-id of the sms you want to check.
 
 *Check SMS sent status*::
 
@@ -70,6 +74,7 @@ You can check sent SMS status specifying a certain date. You can use comparison 
 -------------------
 
 *Make a phone call and playback MP3 file*::
+
  from xoxzo.cloudpy import XoxzoClient
 
  def sample_call_simple_playback():
@@ -91,9 +96,11 @@ You can check sent SMS status specifying a certain date. You can use comparison 
 
 *Explanation*
 
-1. First, you need to create XoxzoClient() object. You must provide xoxzo sid and auth_token when initializing this object. You can get sid and auth_token after you sign up the xoxzo account and access the xoxzo dashboard.
+1. 
+  First, you need to create XoxzoClient() object. You must provide xoxzo sid and auth_token when initializing this object. You can get sid and auth_token after you sign up the xoxzo account and access the xoxzo dashboard.
 
-2. Then you can call call_simple_playback() method. You need to provide three required parameters and one optional parameter.
+2.
+  Then you can call call_simple_playback() method. You need to provide three required parameters and one optional parameter.
 
   * recording_url: URL of the MP3 file you want to playback.
 
@@ -107,13 +114,15 @@ You can check sent SMS status specifying a certain date. You can use comparison 
   This method will return XoxzoResponse object. If XoxzoResponse.errors == None, XoxzoResponse.messages[0]['callid']
   is the meesage id that you can pass to the get_sms_delivery_status() call.
 
-3. You can check the call status by get_simple_playback_status() method. You will provide call-id of the call you want to check.
+3.
+  You can check the call status by get_simple_playback_status() method. You will provide call-id of the call you want to check.
 
 
 **Sample Code 3**
 -------------------
 
 *Make a phone call and playback TTS message*::
+ 
  from xoxzo.cloudpy import XoxzoClient
 
  def sample_call_tts_playback():
@@ -136,9 +145,11 @@ You can check sent SMS status specifying a certain date. You can use comparison 
 
 *Explanation*
 
-1. First, you need to create XoxzoClient() object. You must provide xoxzo sid and auth_token when initializing this object. You can get sid and auth_token after you sign up the xoxzo account and access the xoxzo dashboard.
+1. 
+  First, you need to create XoxzoClient() object. You must provide xoxzo sid and auth_token when initializing this object. You can get sid and auth_token after you sign up the xoxzo account and access the xoxzo dashboard.
 
-2. Then you can call call_tts_playback() method. You need to provide four required parameters and one optional parameter.
+2. 
+  Then you can call call_tts_playback() method. You need to provide four required parameters and one optional parameter.
 
   * caller: this number will be displayed on the recipient device.
 
@@ -154,7 +165,8 @@ You can check sent SMS status specifying a certain date. You can use comparison 
   This method will return XoxzoResponse object. If XoxzoResponse.errors == None, XoxzoResponse.messages[0]['callid']
   is the meesage id that you can pass to the get_sms_delivery_status() call.
 
-3. You can check the call status by get_simple_playback_status() method. You will provide call-id of the call you want to check.
+3. 
+  You can check the call status by get_simple_playback_status() method. You will provide call-id of the call you want to check.
 
 
 **Sample Code 4**
