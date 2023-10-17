@@ -75,6 +75,7 @@ class XoxzoClient:
         self.xoxzo_api_voice_simple_url = (
             api_host + "/voice/simple/playbacks/")
         self.xoxzo_api_dins_url = api_host + "/voice/dins/"
+        self.xoxzo_api_sins_url = api_host + "/sms/sins/"
 
     def send_sms(self, message, recipient, sender, callbackurl=None, **kwargs):
         '''
@@ -309,6 +310,95 @@ class XoxzoClient:
         :return:
         """
         url = self.xoxzo_api_dins_url + 'subscriptions/' + din_uid + '/'
+
+        payload = {
+            'action_url': action_url
+        }
+
+        try:
+            req_res = requests.post(url,
+                                    data=payload,
+                                    auth=(self.sid, self.auth_token))
+            return (self.__parse(req_res))
+        except requests.exceptions.RequestException as e:
+            xr = XoxzoResponse(errors=XoxzoClient.REQUESTS_EXCEPITON, message={"http_error": e})
+            return xr
+
+    def get_sin_list(self, search_string=None):
+        """
+        get sin list
+        :param search_string: eg.'country=JP', 'prefix=813'
+        :return:
+        """
+        if search_string == None:
+            url = self.xoxzo_api_sins_url
+        else:
+            url = self.xoxzo_api_sins_url + '?' + search_string
+        try:
+            req_res = requests.get(url, auth=(self.sid, self.auth_token))
+            return (self.__parse(req_res))
+        except requests.exceptions.RequestException as e:
+            xr = XoxzoResponse(errors=XoxzoClient.REQUESTS_EXCEPITON, message={"http_error": e})
+            return xr
+
+    def subscribe_sin(self, sin_uid=None):
+        """
+        subscribe DIN
+        :param sin_uid:
+        :return:
+        """
+        url = self.xoxzo_api_sins_url + 'subscriptions/'
+
+        payload = {
+            'sin_uid': sin_uid
+        }
+
+        try:
+            req_res = requests.post(url,
+                                    data=payload,
+                                    auth=(self.sid, self.auth_token))
+            return (self.__parse(req_res))
+        except requests.exceptions.RequestException as e:
+            xr = XoxzoResponse(errors=XoxzoClient.REQUESTS_EXCEPITON, message={"http_error": e})
+            return xr
+
+    def unsubscribe_sin(self, sin_uid):
+        """
+        subscribe DIN
+        :param sin_uid:
+        :return:
+        """
+        url = self.xoxzo_api_sins_url + 'subscriptions/' + sin_uid + '/'
+
+        try:
+            req_res = requests.delete(url, auth=(self.sid, self.auth_token))
+            return (self.__parse(req_res))
+        except requests.exceptions.RequestException as e:
+            xr = XoxzoResponse(errors=XoxzoClient.REQUESTS_EXCEPITON, message={"http_error": e})
+            return xr
+
+    def get_subscription_list_sin(self):
+        """
+        Get the list of the current subscribed DINs
+        :return:
+        """
+        url = self.xoxzo_api_sins_url + 'subscriptions/'
+
+        try:
+            req_res = requests.get(url, auth=(self.sid, self.auth_token))
+            return (self.__parse(req_res))
+        except requests.exceptions.RequestException as e:
+            xr = XoxzoResponse(errors=XoxzoClient.REQUESTS_EXCEPITON, message={"http_error": e})
+            return xr
+
+    def set_action_url_sin(self, sin_uid, action_url):
+        """
+        set action url to the sin_uid
+        :param sin_uid:
+        :param action_url:
+        :return:
+        """
+        url = self.xoxzo_api_sins_url + 'subscriptions/' + sin_uid + '/'
 
         payload = {
             'action_url': action_url
