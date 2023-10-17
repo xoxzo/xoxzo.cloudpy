@@ -302,7 +302,43 @@ class XoxzoClient:
             xr = XoxzoResponse(errors=XoxzoClient.REQUESTS_EXCEPITON, message={"http_error": e})
             return xr
 
+    def get_subscription_list_din(self):
+        """
+        Get the list of the current subscribed DINs
+        :return:
+        """
+        url = self.xoxzo_api_dins_url + 'subscriptions/'
+
+        try:
+            req_res = requests.get(url, auth=(self.sid, self.auth_token))
+            return (self.__parse(req_res))
+        except requests.exceptions.RequestException as e:
+            xr = XoxzoResponse(errors=XoxzoClient.REQUESTS_EXCEPITON, message={"http_error": e})
+            return xr
+
     def set_action_url(self, din_uid, action_url):
+        """
+        set action url to the din_uid
+        :param din_uid:
+        :param action_url:
+        :return:
+        """
+        url = self.xoxzo_api_dins_url + 'subscriptions/' + din_uid + '/'
+
+        payload = {
+            'action_url': action_url
+        }
+
+        try:
+            req_res = requests.post(url,
+                                    data=payload,
+                                    auth=(self.sid, self.auth_token))
+            return (self.__parse(req_res))
+        except requests.exceptions.RequestException as e:
+            xr = XoxzoResponse(errors=XoxzoClient.REQUESTS_EXCEPITON, message={"http_error": e})
+            return xr
+
+    def set_action_url_din(self, din_uid, action_url):
         """
         set action url to the din_uid
         :param din_uid:

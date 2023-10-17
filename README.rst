@@ -216,8 +216,8 @@ In order to get the list of current subscriptions, you can call the method above
 SIN API Documentation
 ======================
 
-Sample Code 5
--------------
+**Sample Code 5**
+-------------------
 
 Subscribe SIN
 ~~~~~~~~~~~~~
