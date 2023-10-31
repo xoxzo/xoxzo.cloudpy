@@ -211,3 +211,71 @@ In order to get the list of current subscriptions, you can call the method above
 *Explanation*
 
 1. When you no longer use DIN, you can unsubscribe the DIN by specifying the din unique id.
+
+
+SIN API Documentation
+======================
+
+**Sample Code 5**
+-------------------
+
+Subscribe SIN
+~~~~~~~~~~~~~
+
+Subscribing to a SIN number can be done with the following code:
+
+.. code-block:: python
+
+    xc = XoxzoClient(sid="<your xoxzo sid>", auth_token="<your xoxzo auth_token>")
+    xoxzo_res = xc.get_sin_list()
+    sin_uid = xoxzo_res.messages[0]['sin_uid']
+    xoxzo_res = xc.subscribe_sin(sin_uid=sin_uid)
+
+Explanation:
+    
+1. To subscribe to a SIN number, first find available unsubscribed SIN numbers using the `get_sin_list()` method.
+2. Then subscribe to a SIN number using the `subscribe_sin()` method, specifying the unique identifier of the SIN number.
+
+
+Set Action URL
+~~~~~~~~~~~~~~
+
+Once subscribed to a SIN number, an action URL can be set using the following code:
+
+.. code-block:: python
+
+    an_action_url = 'http://example.com/dummy_action'
+    xoxzo_res = xc.set_action_url_sin(sin_uid=sin_uid, action_url=an_action_url)
+
+Explanation:
+
+1. Once you have subscribed to the SIN number, you can set an action URL to be called when the SIN number is called.
+2. The URL will be called using the HTTP GET method with the parameters `caller` and `recipient`.
+
+
+Get Subscription List
+~~~~~~~~~~~~~~~~~~~~~
+
+You can retrieve a list of currently subscribed SIN numbers with the following code:
+
+.. code-block:: python
+
+    xoxzo_res = xc.get_subscription_list_sin()
+
+Explanation:
+
+You can retrieve a list of currently subscribed SIN numbers using the `get_subscription_list_sin()` method.
+
+
+Unsubscribe SIN
+~~~~~~~~~~~~~~~
+
+To unsubscribe to a SIN number, you can use the following code:
+
+.. code-block:: python   
+   
+    xoxzo_res = xc.unsubscribe_sin(sin_uid=sin_uid)
+
+Explanation:
+
+1. When you no longer require the subscription to a SIN number, you can unsubscribe by specifying the unique identifier of the SIN number using the `unsubscribe_sin()` method.
